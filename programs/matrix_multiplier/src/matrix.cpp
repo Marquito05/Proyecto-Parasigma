@@ -6,7 +6,7 @@
 
 using namespace std;
 
-// Retorna true si el carácter es un espacio en blanco (espacio, tabulación o salto de línea)
+// Retorna true si el caracter es un espacio en blanco (espacio, tabulacion o salto de linea)
 bool esEspacio(char c) {
     return c == ' ' || c == '\t' || c == '\r' || c == '\n';
 }
@@ -26,7 +26,7 @@ string quitarEspacios(const string &texto) {
     return texto.substr(inicio, fin - inicio + 1);
 }
 
-// Revisa que el texto sea un número: signo opcional (+ o -), dígitos y a lo más un punto decimal.
+// Revisa que el texto sea un numero: signo opcional (+ o -), digitos y a lo mas un punto decimal.
 // Válidos: "5", "-3", "2.75", "+0.5"      Inválidos: "", "abc", "1,5", "2..3", "-"
 bool esNumero(const string &texto) {
     if (texto.empty()) return false;
@@ -50,18 +50,18 @@ bool esNumero(const string &texto) {
     return cantidadDigitos > 0 && cantidadPuntos <= 1;
 }
 
-// El separador debe ser exactamente un carácter y no puede confundirse con parte de un número.
+// El separador debe ser exactamente un caracter y no puede confundirse con parte de un numero.
 bool separadorValido(const string &texto) {
     if (texto.size() != 1) return false;
 
     char c = texto[0];
-    if (c >= '0' && c <= '9') return false;             // los dígitos forman los números
-    if (c == '.' || c == '-' || c == '+') return false; // el punto y los signos también
-    if (esEspacio(c)) return false;                     // los espacios se eliminan al leer
+    if (c >= '0' && c <= '9') return false;
+    if (c == '.' || c == '-' || c == '+') return false;
+    if (esEspacio(c)) return false; 
     return true;
 }
 
-// Divide una línea en elementos usando el separador, recorriéndola carácter por carácter.
+// Divide una linea en elementos usando el separador, recorriendola caracter por caracter.
 // Ejemplo con '#': "1#2#3" -> {"1", "2", "3"}      "1##3" -> {"1", "", "3"}
 vector<string> separarLinea(const string &linea, char separador) {
     vector<string> elementos;
@@ -69,24 +69,23 @@ vector<string> separarLinea(const string &linea, char separador) {
 
     for (int i = 0; i < (int) linea.size(); i++) {
         if (linea[i] == separador) {
-            elementos.push_back(actual); // se encontró un separador: terminó un elemento
+            elementos.push_back(actual);
             actual = "";
         } else {
-            actual = actual + linea[i];  // el carácter es parte del elemento actual
+            actual = actual + linea[i];
         }
     }
-    elementos.push_back(actual); // el último elemento no tiene separador después
+    elementos.push_back(actual);
     return elementos;
 }
 
-// Lee una matriz desde un archivo de texto: cada línea es una fila y los elementos
-// de la fila van separados por el separador. Valida el formato y el contenido.
+// Lee una matriz desde un archivo de texto: cada línea es una fila y los elementos de la fila van separados por el separador. Valida el formato y el contenido.
 // Retorna EXITO o el código de error que corresponda (y muestra el detalle del error).
 int leerMatriz(const string &ruta, char separador, Matriz &matriz) {
     ifstream archivo(ruta);
     if (!archivo.is_open()) {
         cout << "ERROR! No se pudo abrir el archivo: " << ruta << "\n";
-        cout << "       Revise que la ruta sea correcta y que el archivo exista.\n";
+        cout << "Revise que la ruta sea correcta y que el archivo exista.\n";
         return ERROR_ARCHIVO;
     }
 
@@ -100,7 +99,7 @@ int leerMatriz(const string &ruta, char separador, Matriz &matriz) {
     while (getline(archivo, linea)) {
         numeroLinea++;
         linea = quitarEspacios(linea);
-        if (linea.empty()) continue; // las líneas vacías se ignoran
+        if (linea.empty()) continue; 
 
         vector<string> elementos = separarLinea(linea, separador);
         vector<double> fila;
@@ -110,40 +109,36 @@ int leerMatriz(const string &ruta, char separador, Matriz &matriz) {
             string elemento = quitarEspacios(elementos[j]);
 
             if (elemento.empty()) {
-                cout << "ERROR! Archivo " << ruta << ", línea " << numeroLinea
-                     << ": el elemento " << (j + 1) << " está vacío.\n";
-                cout << "       Revise que no haya dos separadores seguidos ni un separador al inicio o al final de la línea.\n";
+                cout << "ERROR! Archivo " << ruta << ", línea " << numeroLinea << ": el elemento " << (j + 1) << " esta vacío.\n";
+                cout << "Revise que no haya dos separadores seguidos ni un separador al inicio o al final de la linea.\n";
                 archivo.close();
                 return ERROR_FORMATO;
             }
 
             if (!esNumero(elemento)) {
-                cout << "ERROR! Archivo " << ruta << ", línea " << numeroLinea
-                     << ": el elemento '" << elemento << "' no es un número válido.\n";
-                cout << "       Revise que el separador del archivo sea '" << separador
-                     << "' y que los decimales usen punto (ej: 2.5).\n";
+                cout << "ERROR! Archivo " << ruta << ", linea " << numeroLinea << ": el elemento '" << elemento << "' no es un numero valido.\n";
+                cout << "Revise que el separador del archivo sea '" << separador << "' y que los decimales usen punto (ej: 2.5).\n";
                 archivo.close();
                 return ERROR_FORMATO;
             }
 
-            // stod convierte el texto a número real; lanza una excepción si el número es demasiado grande
+            // stod convierte el texto a numero real; lanza una excepción si el numero es demasiado grande
             try {
                 fila.push_back(stod(elemento));
             } catch (...) {
-                cout << "ERROR! Archivo " << ruta << ", línea " << numeroLinea
-                     << ": el número '" << elemento << "' es demasiado grande.\n";
+                cout << "ERROR! Archivo " << ruta << ", linea " << numeroLinea
+                     << ": el numero '" << elemento << "' es demasiado grande.\n";
                 archivo.close();
                 return ERROR_FORMATO;
             }
         }
 
-        // La primera fila define cuántas columnas tiene la matriz; las demás deben tener las mismas
+        // La primera fila define cuántas columnas tiene la matriz, las demas deben tener las mismas
         if (matriz.filas == 0) {
             matriz.columnas = (int) fila.size();
         } else if ((int) fila.size() != matriz.columnas) {
-            cout << "ERROR! Archivo " << ruta << ", línea " << numeroLinea << ": tiene " << fila.size()
-                 << " elementos, pero la primera fila tiene " << matriz.columnas << ".\n";
-            cout << "       Todas las filas de una matriz deben tener la misma cantidad de columnas.\n";
+            cout << "ERROR! Archivo " << ruta << ", línea " << numeroLinea << ": tiene " << fila.size() << " elementos, pero la primera fila tiene " << matriz.columnas << ".\n";
+            cout << "Todas las filas de una matriz deben tener la misma cantidad de columnas.\n";
             archivo.close();
             return ERROR_FORMATO;
         }
@@ -155,14 +150,14 @@ int leerMatriz(const string &ruta, char separador, Matriz &matriz) {
     // bad() indica que hubo un error al leer (por ejemplo, la ruta es una carpeta y no un archivo)
     if (archivo.bad()) {
         cout << "ERROR! No se pudo leer el archivo: " << ruta << "\n";
-        cout << "       Revise que la ruta sea un archivo de texto y no una carpeta.\n";
+        cout << "Revise que la ruta sea un archivo de texto y no una carpeta.\n";
         archivo.close();
         return ERROR_ARCHIVO;
     }
     archivo.close();
 
     if (matriz.filas == 0) {
-        cout << "ERROR! El archivo " << ruta << " está vacío, no contiene ninguna matriz.\n";
+        cout << "ERROR! El archivo " << ruta << " esta vacío, no contiene ninguna matriz.\n";
         return ERROR_FORMATO;
     }
     return EXITO;
@@ -171,8 +166,8 @@ int leerMatriz(const string &ruta, char separador, Matriz &matriz) {
 // Multiplica A x B. Cada casilla del resultado es: resultado[i][j] = suma de A[i][k] * B[k][j]
 // Antes de llamarla se debe verificar que las columnas de A sean iguales a las filas de B.
 void multiplicarMatrices(const Matriz &a, const Matriz &b, Matriz &resultado) {
-    resultado.filas = a.filas;        // el resultado tiene las filas de A
-    resultado.columnas = b.columnas;  // y las columnas de B
+    resultado.filas = a.filas;        
+    resultado.columnas = b.columnas; 
     resultado.datos.clear();
 
     for (int i = 0; i < a.filas; i++) {
@@ -195,7 +190,6 @@ void imprimirMatriz(const Matriz &matriz) {
     for (int i = 0; i < matriz.filas; i++) {
         for (int j = 0; j < matriz.columnas; j++) {
             double valor = matriz.datos[i][j];
-            // Un valor negativo muy cercano a cero se mostraría como "-0.00"; se muestra como 0.00
             if (valor > -0.005 && valor < 0.005) valor = 0.0;
             cout << setw(12) << valor;
         }

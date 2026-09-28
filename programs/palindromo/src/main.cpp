@@ -1,4 +1,4 @@
-#include "palindromo.hpp"
+#include "../include/palindromo.hpp"
 
 int main() {
     menuPalindromo();

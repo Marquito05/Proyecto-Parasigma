@@ -4,15 +4,15 @@
 #include <string>
 #include <vector>
 
-// Códigos de salida del programa (el valor que retorna main).
-// El menú principal los recibe a través de system() para saber cómo terminó el programa.
+// Codigos de salida del programa (el valor que retorna main).
+// El menu principal los recibe a través de system() para saber cómo termino el programa.
 const int EXITO = 0;              // la multiplicación se realizó correctamente
 const int ERROR_ARGUMENTOS = 1;   // faltan argumentos o el separador no es válido
 const int ERROR_ARCHIVO = 2;      // no se pudo abrir alguno de los archivos
 const int ERROR_FORMATO = 3;      // el contenido de un archivo no tiene el formato correcto
 const int ERROR_DIMENSIONES = 4;  // las matrices no se pueden multiplicar
 
-// Una matriz se guarda como una lista de filas; cada fila es una lista de números.
+// Una matriz se guarda como una lista de filas, cada fila es una lista de numeros.
 struct Matriz {
     int filas;
     int columnas;

@@ -36,16 +36,3 @@ int main(int argc, char* argv[]) {
 
 // g++ -std=c++17 -Wall -o main env_config.h utils.h main.cpp
 // ./main user password file
-
-
-/*
-fix admin code:
--remove safeguards to create .env and text files   (DONE)
--add exclusivity to usernames                      (DONE)
--do .h files only                                  (DONE)
-
-fix main code:
--add makefiles                                     (DONE)
--do debugging for whole project, not just one file
-
-*/

@@ -4,8 +4,8 @@
 
 #include <iostream>
 #include <string>
-#include <cstdlib>     // system()
-#include <sys/wait.h>  // WIFSIGNALED, WTERMSIG, WEXITSTATUS
+#include <cstdlib> // system()
+#include <sys/wait.h> // WIFSIGNALED, WTERMSIG, WEXITSTATUS
 
 // Rodea el argumento con comillas simples: texto -> 'texto'
 // Dentro de comillas simples la shell NO interpreta caracteres especiales (; | & $ > espacios, etc.),
@@ -33,9 +33,9 @@ int ejecutarPrograma(const std::string &comando) {
         return -1;
     }
 
-    std::cout << "\n[Menú] Ejecutando: " << comando << "\n";
+    std::cout << "\n[Menu] Ejecutando: " << comando << "\n";
 
-    // Se vacía el buffer de salida antes de crear el proceso hijo,
+    // Se vacia el buffer de salida antes de crear el proceso hijo,
     // para que los mensajes del menú y los del programa llamado aparezcan en orden
     std::cout.flush();
 
@@ -46,13 +46,13 @@ int ejecutarPrograma(const std::string &comando) {
 
     // Prueba 2: -1 significa que no se pudo crear el proceso hijo
     if (estado == -1) {
-        std::cout << "[Menú] ERROR! No se pudo crear el proceso para ejecutar el programa.\n";
+        std::cout << "[Menu] ERROR! No se pudo crear el proceso para ejecutar el programa.\n";
         return -1;
     }
 
     // Prueba 3: el programa pudo ser detenido por una señal (ej: kill o Ctrl+C) antes de terminar
     if (WIFSIGNALED(estado)) {
-        std::cout << "[Menú] El programa fue interrumpido por la señal " << WTERMSIG(estado) << ".\n";
+        std::cout << "[Menu] El programa fue interrumpido por la señal " << WTERMSIG(estado) << ".\n";
         return -1;
     }
 
@@ -60,19 +60,18 @@ int ejecutarPrograma(const std::string &comando) {
     int codigo = WEXITSTATUS(estado);
 
     if (codigo == 0) {
-        std::cout << "[Menú] El programa terminó correctamente (código 0).\n";
+        std::cout << "[Menu] El programa terminó correctamente (código 0).\n";
     } else if (codigo == 127) {
-        std::cout << "[Menú] ERROR! No se encontró el programa (código 127). "
-                  << "Compile con 'make' y revise la ruta en el .env.\n";
+        std::cout << "[Menu] ERROR! No se encontró el programa (código 127). " << "Compile con 'make' y revise la ruta en el .env.\n";
     } else if (codigo == 126) {
-        std::cout << "[Menú] ERROR! El programa no tiene permisos de ejecución (código 126).\n";
+        std::cout << "[Menu] ERROR! El programa no tiene permisos de ejecución (código 126).\n";
     } else {
-        std::cout << "[Menú] El programa terminó con errores (código " << codigo << ").\n";
+        std::cout << "[Menu] El programa terminó con errores (código " << codigo << ").\n";
     }
     return codigo;
 }
 
-// Opción 1 del menú: abre el administrador de usuarios y perfiles (programa de la entrega 1)
+// Opcion 1 del menu: abre el administrador de usuarios y perfiles (programa de la entrega 1)
 void llamarAdminUsuarios(const std::string &userFile, const std::string &profileFile) {
     // La ruta del programa se define en el .env
     std::string programa = leerVariableEnv("USER_ADMIN_PROGRAM");
@@ -87,8 +86,7 @@ void llamarAdminUsuarios(const std::string &userFile, const std::string &profile
     }
 
     // Comando que se ejecuta:  './bin/user_admin' 'USUARIOS.txt' 'PERFILES.txt'
-    std::string comando = protegerArgumento(programa) + " " + protegerArgumento(userFile) + " "
-                        + protegerArgumento(profileFile);
+    std::string comando = protegerArgumento(programa) + " " + protegerArgumento(userFile) + " " + protegerArgumento(profileFile);
     ejecutarPrograma(comando);
 }
 
@@ -104,22 +102,22 @@ void llamarMultiplicador(const std::string &usuario, const std::string &perfil) 
     std::string rutaA, rutaB, separador;
 
     std::cout << "\n=== MULTIPLICAR MATRICES ===\n";
-    std::cout << "Cada archivo debe tener una fila de la matriz por línea, con los números separados por el separador.\n";
-    std::cout << "Para cancelar, deje un dato vacío y presione ENTER.\n\n";
+    std::cout << "Cada archivo debe tener una fila de la matriz por linea, con los numeros separados por el separador.\n";
+    std::cout << "Para cancelar, deje un dato vacio y presione ENTER.\n\n";
 
-    std::cout << "Ruta del archivo de la matriz A (ej: /home/usuario/A.TXT): ";
+    std::cout << "Ruta del archivo de la matriz A: ";
     getline(std::cin, rutaA);
     rutaA = get_trimmed_string(rutaA);
     if (rutaA.empty()) {
-        std::cout << "Operación cancelada.\n";
+        std::cout << "Operacion cancelada.\n";
         return;
     }
 
-    std::cout << "Ruta del archivo de la matriz B (ej: /home/usuario/B.TXT): ";
+    std::cout << "Ruta del archivo de la matriz B: ";
     getline(std::cin, rutaB);
     rutaB = get_trimmed_string(rutaB);
     if (rutaB.empty()) {
-        std::cout << "Operación cancelada.\n";
+        std::cout << "Operacion cancelada.\n";
         return;
     }
 
@@ -127,26 +125,26 @@ void llamarMultiplicador(const std::string &usuario, const std::string &perfil) 
     getline(std::cin, separador);
     separador = get_trimmed_string(separador);
     if (separador.empty()) {
-        std::cout << "Operación cancelada.\n";
+        std::cout << "Operacion cancelada.\n";
         return;
     }
 
     // Proteger la integridad del sistema: se rechaza cualquier dato con comillas simples
-    if (!argumentoSeguro(programa) || !argumentoSeguro(rutaA) || !argumentoSeguro(rutaB) ||
+    if (!argumentoSeguro(programa) || !argumentoSeguro(rutaA) || !argumentoSeguro(rutaB) || 
         !argumentoSeguro(separador) || !argumentoSeguro(usuario) || !argumentoSeguro(perfil)) {
-        std::cout << "ERROR! Los datos no pueden contener comillas simples ('). Operación cancelada.\n";
+        std::cout << "ERROR! Los datos no pueden contener comillas simples ('). Operacion cancelada.\n";
         return;
     }
 
     // Comando que se ejecuta:  './bin/multi' 'rutaA' 'rutaB' 'separador' 'usuario' 'perfil'
     // (el programa multi se encarga de validar los archivos, el separador y las dimensiones)
-    std::string comando = protegerArgumento(programa) + " " + protegerArgumento(rutaA) + " "
+    std::string comando = protegerArgumento(programa) + " " + protegerArgumento(rutaA) + " " 
                         + protegerArgumento(rutaB) + " " + protegerArgumento(separador) + " "
                         + protegerArgumento(usuario) + " " + protegerArgumento(perfil);
     ejecutarPrograma(comando);
 
     // Pausa para alcanzar a leer el resultado antes de que vuelva a aparecer el menú
-    std::cout << "\nPresione ENTER para volver al menú principal...";
+    std::cout << "\nPresione ENTER para volver al menu principal...";
     std::string pausa;
     getline(std::cin, pausa);
 }
