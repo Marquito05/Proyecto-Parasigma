@@ -47,7 +47,7 @@ bool userProfileSearch(const std::string &user_file, const std::string &profile_
         }
     }
     usrFile.close();
-    std::cout << "profile: " << profile << '\n';
+    //std::cout << "profile: " << profile << '\n';
 
     if (user == usr && password == pswd) {
         std::ifstream profFile(profile_file); // Checkear perfil
@@ -79,7 +79,7 @@ bool userProfileSearch(const std::string &user_file, const std::string &profile_
                 }
                 try {
                     tempPerms[stoi(permToken)] = true;
-                    std::cout << "permiso: " << permToken << '\n';
+                    //std::cout << "permiso: " << permToken << '\n';
                 } catch (...) {
                     permisosValidos = false;
                     break;
@@ -111,7 +111,7 @@ void mainMenu(const std::string &user_file, const std::string &profile_file, std
         }
 
         sanitizeStream();
-        std::cout << "option: " << option << "\n";
+        //std::cout << "option: " << option << "\n";
         if (option == 1 && perms.find(option) != perms.end()) {
             std::string cmd = "./bin/user_admin " + user_file + " " + profile_file;
             system(cmd.c_str()); //c_str es necesario para convertir a char*, system solo permite char*

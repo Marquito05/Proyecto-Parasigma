@@ -36,8 +36,8 @@ bool environmentVars(std::string &userFile, std::string &profileFile) {
 
     envFile.close();
 
-    std::cout << "profile: " << profileFile << "\n";
-    std::cout << "User: " << userFile << "\n";
+    //std::cout << "profile: " << profileFile << "\n";
+    //std::cout << "User: " << userFile << "\n";
 
     // Crear archivos si no existen usando rutas válidas
     if (!std::filesystem::exists(profileFile)) {

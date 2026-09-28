@@ -26,8 +26,8 @@ int main(int argc, char* argv[]) {
     User* users = new User[user_size_arr];
     cargarUsuarios(users, perfiles, nameTable, user_size, size_arr, idTable, USER_FILE);
 
-    cout << "user: " << USER_FILE << endl;
-    cout << "profile: " << PROFILE_FILE << endl;
+    //cout << "user: " << USER_FILE << endl;
+    //cout << "profile: " << PROFILE_FILE << endl;
 
     int option = -1;
     while (option != 0) {

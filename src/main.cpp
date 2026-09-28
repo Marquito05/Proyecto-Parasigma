@@ -8,21 +8,22 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-    cout << "you have entered " << argc << " arguments: " << '\n';
+    //cout << "you have entered " << argc << " arguments: " << '\n';
     string usr, file, pswd;
     map<int, bool> perms;
 
-    int i=0;
+    
+    /*int i=0;
     while (i < argc) {
         cout << "argument " << i+1 << ": " << argv[i] << endl;
         i++;
-    }
+    }*/
 
     usr = argv[1];
     pswd = argv[2];
     file = argv[3];
 
-    cout << "user: " << usr << "\npswd: " << pswd << "\nfile: " << file << '\n';
+    //cout << "user: " << usr << "\npswd: " << pswd << "\nfile: " << file << '\n';
 
     string USER_FILE, PROFILE_FILE;
     if (environmentVars(USER_FILE, PROFILE_FILE)) {
