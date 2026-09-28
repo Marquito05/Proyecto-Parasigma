@@ -8,6 +8,12 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
+    // Este programa lo llama el menú principal con system() y necesita 2 argumentos
+    if (argc != 3) {
+        cout << "ERROR! Uso: ./bin/user_admin <archivo_usuarios> <archivo_perfiles>\n";
+        return 1;
+    }
+
     string USER_FILE, PROFILE_FILE;
     USER_FILE = argv[1];
     PROFILE_FILE = argv[2];

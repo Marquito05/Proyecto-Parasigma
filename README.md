@@ -118,12 +118,16 @@ La configuración se define en el archivo **`.env`**, ubicado en la raíz del pr
 |---|---|---|---|
 | `USER_FILE` | Ruta de archivo | Ruta **absoluta o relativa** al archivo de texto donde se persisten los usuarios del sistema. Cada usuario ocupa una línea. Si el archivo no existe, se crea vacío al iniciar. | `USUARIOS.TXT` en el directorio de ejecución |
 | `PERFIL_FILE` | Ruta de archivo | Ruta **absoluta o relativa** al archivo de texto donde se persisten los perfiles y sus permisos. Cada perfil ocupa una línea. Si el archivo no existe, se crea con los perfiles `ADMIN` y `GENERAL` por defecto. | `PERFILES.TXT` en el directorio de ejecución |
+| `USER_ADMIN_PROGRAM` | Ruta de ejecutable | Programa que abre la opción 1 del menú principal (administrador de usuarios y perfiles). El menú lo ejecuta con `system()`. Si falta, el menú muestra un error. | Sin valor por defecto; en el `.env` del repositorio: `./bin/user_admin` |
+| `MULTI_PROGRAM` | Ruta de ejecutable | Programa que abre la opción 2 del menú principal (multiplicador de matrices). El menú lo ejecuta con `system()`. Si falta, el menú muestra un error. | Sin valor por defecto; en el `.env` del repositorio: `./bin/multi` |
 
 **Ejemplo de `.env` con rutas relativas:**
 
 ```
 USER_FILE=USUARIOS.TXT
 PERFIL_FILE=PERFILES.TXT
+USER_ADMIN_PROGRAM=./bin/user_admin
+MULTI_PROGRAM=./bin/multi
 ```
 
 **Ejemplo con rutas absolutas:**

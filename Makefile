@@ -14,22 +14,24 @@ EXEC = main
 
 # Archivos fuente de programa principal
 MAIN = $(SRC_DIR)/main.cpp
-SOURCES = $(SRC_DIR)/env_config.cpp $(SRC_DIR)/utils.cpp $(SRC_DIR)/menu_repository.cpp 
+SOURCES = $(SRC_DIR)/env_config.cpp $(SRC_DIR)/utils.cpp $(SRC_DIR)/menu_repository.cpp $(SRC_DIR)/program_runner.cpp
 
 # Archivos objeto programa principal
-OBJECTS = $(OUT_DIR)/env_config.o $(OUT_DIR)/utils.o $(OUT_DIR)/menu_repository.o
+OBJECTS = $(OUT_DIR)/env_config.o $(OUT_DIR)/utils.o $(OUT_DIR)/menu_repository.o $(OUT_DIR)/program_runner.o
 
 # Ejecutable
 EXECUTABLE = $(BIN_DIR)/$(EXEC)
 
-# Regla por defecto
-all: $(EXECUTABLE) $(BIN_DIR)/user_admin 
+# Regla por defecto: compila el menú principal y los programas que llama con system()
+all: $(EXECUTABLE) $(BIN_DIR)/user_admin $(BIN_DIR)/multi
 
 # Incluir submodulos
 include programs/user_manager/rules.mk
+include programs/matrix_multiplier/rules.mk
 
 # Compilar el ejecutable principal enlazando los objetos y main.cpp directamente
-$(EXECUTABLE): $(OBJECTS) | $(BIN_DIR)
+# (main.cpp es prerrequisito para que se recompile cuando cambie)
+$(EXECUTABLE): $(OBJECTS) $(MAIN) | $(BIN_DIR)
 	$(CXX) $(OBJECTS) -o $@ $(MAIN) -I$(INC_DIR)
 
 # Regla para compilar cada archivo .cpp en su correspondiente .o

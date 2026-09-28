@@ -9,7 +9,7 @@ using namespace std;
 
 int main(int argc, char* argv[]) {
     //cout << "you have entered " << argc << " arguments: " << '\n';
-    string usr, file, pswd;
+    string usr, file, pswd, profile;
     map<int, bool> perms;
 
     
@@ -27,8 +27,8 @@ int main(int argc, char* argv[]) {
 
     string USER_FILE, PROFILE_FILE;
     if (environmentVars(USER_FILE, PROFILE_FILE)) {
-        if (userProfileSearch(USER_FILE, PROFILE_FILE, usr, pswd, perms)) {
-            mainMenu(USER_FILE, PROFILE_FILE, perms);
+        if (userProfileSearch(USER_FILE, PROFILE_FILE, usr, pswd, perms, profile)) {
+            mainMenu(USER_FILE, PROFILE_FILE, perms, usr, profile);
         }
     }
 }
