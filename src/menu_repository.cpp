@@ -1,4 +1,5 @@
 #include "../include/utils.hpp"
+#include "../include/program_runner.hpp"
 
 #include <filesystem>
 #include <fstream>
@@ -6,7 +7,7 @@
 #include <iostream>
 
 bool userProfileSearch(const std::string &user_file, const std::string &profile_file, const std::string &user, 
-                        const std::string &password, std::map<int, bool> &permList) {
+                        const std::string &password, std::map<int, bool> &permList, std::string &profileName) {
     // cargar usuarios
     std::string line, usr, pswd, profile, token;
     std::ifstream usrFile(user_file);
@@ -89,6 +90,7 @@ bool userProfileSearch(const std::string &user_file, const std::string &profile_
             // Si la línea tiene permisos inválidos o está vacía, se salta la línea completa
             if (permisosValidos==false || tempPerms.empty()) continue;
             permList = tempPerms;
+            profileName = profile; // se devuelve el perfil para mostrarlo y enviarlo a otros programas
             return true;
         }
     }
@@ -97,7 +99,8 @@ bool userProfileSearch(const std::string &user_file, const std::string &profile_
 }
 
 
-void mainMenu(const std::string &user_file, const std::string &profile_file, std::map<int, bool> &perms) {
+void mainMenu(const std::string &user_file, const std::string &profile_file, std::map<int, bool> &perms,
+              const std::string &user, const std::string &profile) {
 
     int option = -1;
     while (option != 0) {
@@ -113,14 +116,15 @@ void mainMenu(const std::string &user_file, const std::string &profile_file, std
         sanitizeStream();
         //std::cout << "option: " << option << "\n";
         if (option == 1 && perms.find(option) != perms.end()) {
-            std::string cmd = "./bin/user_admin " + user_file + " " + profile_file;
-            system(cmd.c_str()); //c_str es necesario para convertir a char*, system solo permite char*
+            llamarAdminUsuarios(user_file, profile_file); // ejecuta ./bin/user_admin con system()
         }
         else if (option == 1 && perms.find(option) == perms.end()) std::cout << "Usuario no tiene permisos para este modulo." << '\n';
 
-        else if (option == 2) {
-            std::cout << "Opcion en construccion!" << '\n';
+        else if (option == 2 && perms.find(option) != perms.end()) {
+            llamarMultiplicador(user, profile); // ejecuta ./bin/multi con system()
         }
+        else if (option == 2 && perms.find(option) == perms.end()) std::cout << "Usuario no tiene permisos para este modulo." << '\n';
+
         else if (option == 3) {
             std::cout << "Opcion en construccion!" << '\n';
         }

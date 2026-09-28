@@ -51,3 +51,31 @@ bool environmentVars(std::string &userFile, std::string &profileFile) {
     }
     return true;
 }
+
+// Busca una variable en el archivo .env y retorna su valor.
+// Ejemplo: si el .env tiene "MULTI_PROGRAM=./bin/multi", leerVariableEnv("MULTI_PROGRAM") retorna "./bin/multi".
+// Si el archivo o la variable no existen, retorna un texto vacío.
+std::string leerVariableEnv(const std::string &nombre) {
+    std::ifstream envFile(".env");
+    std::string line;
+
+    while (getline(envFile, line)) {
+        size_t eqPos = line.find('=');
+        if (eqPos == std::string::npos) continue; // línea sin '=': no es una variable
+
+        std::string key = line.substr(0, eqPos);
+        std::string value = line.substr(eqPos + 1);
+
+        // Elimina posibles saltos de línea invisibles (\r) al final
+        if (!value.empty() && value.back() == '\r') {
+            value.pop_back();
+        }
+
+        if (key == nombre) {
+            envFile.close();
+            return value;
+        }
+    }
+    envFile.close();
+    return "";
+}
