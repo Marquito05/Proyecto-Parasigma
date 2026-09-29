@@ -129,10 +129,10 @@ void mainMenu(const std::string &user_file, const std::string &profile_file, std
             std::cout << "Opcion en construccion!" << '\n';
         }
         else if (option == 4) {
-            std::cout << "Opcion en construccion!" << '\n';
+            llamarPalindrome();
         }
         else if (option == 5) {
-            std::cout << "Opcion en construccion!" << '\n';
+            llamarFx();
         }
         else if (option == 6) {
             std::cout << "Opcion en construccion!" << '\n';

@@ -19,4 +19,7 @@ void llamarAdminUsuarios(const std::string &userFile, const std::string &profile
 // pide rutas de matrices y el separador, y llama al multiplicador
 void llamarMultiplicador(const std::string &usuario, const std::string &perfil);
 
+void llamarPalindrome();
+void llamarFx();
+
 #endif

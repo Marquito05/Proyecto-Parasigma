@@ -1,6 +1,6 @@
-#include "function_fx.hpp"
+#include "../include/function_fx.hpp"
 
 int main() {
-    menuFuncion();
+    menuFunction();
     return 0;
 }

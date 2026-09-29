@@ -22,7 +22,6 @@ void menuPalindromo() {
     std::cout << "";
     
     std::cout << "Ingrese el texto a evaluar: ";
-    std::cin.ignore();
     getline(std::cin, textoIngresado);
 
     do {

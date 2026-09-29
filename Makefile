@@ -23,12 +23,13 @@ OBJECTS = $(OUT_DIR)/env_config.o $(OUT_DIR)/utils.o $(OUT_DIR)/menu_repository.
 EXECUTABLE = $(BIN_DIR)/$(EXEC)
 
 # Regla por defecto: compila el menú principal y los programas que llama con system()
-all: $(EXECUTABLE) $(BIN_DIR)/user_admin $(BIN_DIR)/multi $(BIN_DIR)/palindromo
+all: $(EXECUTABLE) $(BIN_DIR)/user_admin $(BIN_DIR)/multi $(BIN_DIR)/palindromo $(BIN_DIR)/funcion_fx
 
 # Incluir submodulos
 include programs/user_manager/rules.mk
 include programs/matrix_multiplier/rules.mk
 include programs/palindromo/rules.mk
+include programs/function/rules.mk
 
 # Compilar el ejecutable principal enlazando los objetos y main.cpp directamente
 # (main.cpp es prerrequisito para que se recompile cuando cambie)

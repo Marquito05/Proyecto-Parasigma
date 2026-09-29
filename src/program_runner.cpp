@@ -148,3 +148,26 @@ void llamarMultiplicador(const std::string &usuario, const std::string &perfil) 
     std::string pausa;
     getline(std::cin, pausa);
 }
+
+void llamarPalindrome() {
+    std::string programa = leerVariableEnv("PALINDROME_PROGRAM");
+    if (programa.empty()) {
+        std::cout << "ERROR! Falta la variable PALINDROME_PROGRAM en el archivo '.env'.\n";
+        return;
+    }
+
+    std::string comando = protegerArgumento(programa);
+    ejecutarPrograma(comando);
+}
+
+void llamarFx() {
+    std::string programa = leerVariableEnv("FX_PROGRAM");
+    if (programa.empty()) {
+        std::cout << "ERROR! Falta la variable FX_PROGRAM en el archivo '.env'.\n";
+        return;
+    }
+
+    std::string comando = protegerArgumento(programa);
+    ejecutarPrograma(comando);
+
+}
