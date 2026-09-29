@@ -64,7 +64,7 @@ El sistema recibe **argumentos de ejecución**:
 
 Ejemplo con datos reales:
 ```bash
-./bin/main -u Mesmer -p 2893983 -f "data/1984.txt"
+./bin/main -u Mesmer -p 21032190 -f "data/1984.txt"
 ```
 Los tres argumentos son obligatorios. Si falta alguno, si un argumento está repetido, vacío o es desconocido, el programa muestra un mensaje de error con el uso correcto y termina sin abrir el menú. Si el usuario o el password no son válidos, muestra un error de autenticación y termina.
 

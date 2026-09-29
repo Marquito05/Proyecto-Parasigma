@@ -1,4 +1,4 @@
-#include "args.hpp"
+#include "../include/args.hpp"
 #include <iostream>
 
 void mostrarUso(const std::string &programa) {

@@ -161,9 +161,9 @@ void llamarPalindromo() {
 
 void llamarFx() {
     // La ruta del programa se define en el .env
-    std::string programa = leerVariableEnv("FUNCION_PROGRAM");
+    std::string programa = leerVariableEnv("FX_PROGRAM");
     if (programa.empty()) {
-        std::cout << "ERROR! Falta la variable FUNCION_PROGRAM en el archivo .env.\n";
+        std::cout << "ERROR! Falta la variable FX_PROGRAM en el archivo .env.\n";
         return;
     }
 
