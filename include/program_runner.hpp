@@ -9,14 +9,26 @@ std::string protegerArgumento(const std::string &argumento);
 // Revisa que un argumento se pueda pasar de forma segura a la shell (no vacío y sin comillas simples)
 bool argumentoSeguro(const std::string &argumento);
 
-// Ejecuta un comando con system() y muestra cómo terminó el programa llamado.
-// Retorna el código de salida del programa (0 = sin errores) o -1 si no se pudo ejecutar.
+// Ejecuta un comando con system() y muestra como termino el programa llamado.
+// Retorna el codigo de salida del programa (0 = sin errores) o -1 si no termino normalmente.
 int ejecutarPrograma(const std::string &comando);
 
-// Opción 1 del menú: abre el administrador de usuarios y perfiles
+// abre el administrador de usuarios y perfiles
 void llamarAdminUsuarios(const std::string &userFile, const std::string &profileFile);
 
-// Opción 2 del menú: pide las rutas de las matrices y el separador, y llama al multiplicador
+// pide rutas de matrices y el separador, y llama al multiplicador
 void llamarMultiplicador(const std::string &usuario, const std::string &perfil);
+
+// abre el programa del palindromo
+void llamarPalindromo();
+
+// abre el programa que calcula f(x)
+void llamarFuncion();
+
+// cuenta el archivo recibido con -f (opcion 6)
+void llamarConteoTexto(const std::string &archivo);
+
+// abre el conteo para que pida la ruta de un archivo (opcion 7)
+void llamarConteoArchivo();
 
 #endif

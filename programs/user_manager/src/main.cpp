@@ -57,19 +57,3 @@ int main(int argc, char* argv[]) {
 
 // g++ -std=c++17 -Wall -o main main.cpp models.h utils.h env_config.cpp profile_repository.cpp; ./main
 
-/*
-15/8:
--Sanitizacion de input añadida
-
-19/8
--Logica de listas dinamicas añadida
--Formateo de print para listar usuarios
--Funcion de insercion añadida
-
-21/8
--Logica de eliminacion de usuarios añadida
--Logica de variables de ambiente
-
-23/8
--Logica de gestion de perfiles añadida
-*/
