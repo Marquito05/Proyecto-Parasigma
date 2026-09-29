@@ -1,6 +1,6 @@
 # SistOpe - Módulo "Administrador de Usuarios y Perfiles"
 **INFO198 - Sistemas Operativos** · Universidad Austral de Chile
-Docente: Dr. Luis Veas-Castillo · **Entrega 1**
+Docente: Dr. Luis Veas-Castillo
 **Grupo:** Parasigma
 **Integrantes:**
 - Marco Peralta
