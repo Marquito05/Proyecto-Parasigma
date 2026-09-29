@@ -100,22 +100,50 @@ bool userProfileSearch(const std::string &user_file, const std::string &profile_
 }
 
 
+static void mostrarMenu(const std::string &user, const std::string &profile) {
+    std::cout << "\n========================================\n"
+              << "          MENU PRINCIPAL - SistOpe\n"
+              << "========================================\n"
+              << "Usuario: " << user << "\n"
+              << "Perfil:  " << profile << "\n"
+              << "----------------------------------------\n"
+              << "1) Administrar usuarios y perfiles\n"
+              << "2) Multiplicar matrices NxM\n"
+              << "3) Juego\n"
+              << "4) Es palindromo?\n"
+              << "5) Calcular f(x) = x*x + 2x + 8\n"
+              << "6) Conteo sobre texto (archivo -f)\n"
+              << "7) Conteo sobre archivo\n"
+              << "0) Salir\n"
+              << "----------------------------------------\n"
+              << "Ingresar opcion: ";
+}
+
+// Lee una opcion del menu (0-7). Retorna false si se cerro la entrada (EOF).
+static bool leerOpcion(int &option) {
+    std::string linea;
+    while (true) {
+        if (!std::getline(std::cin, linea)) return false;
+        linea = get_trimmed_string(linea);
+        if (!linea.empty() && linea.size() <= 2 && isdigit_string(linea)) {
+            option = std::stoi(linea);
+            if (option >= 0 && option <= 7) return true;
+        }
+        std::cout << "\nERROR: opcion invalida. Ingrese un numero entre 0 y 7.\nIngresar opcion: ";
+    }
+}
+
 void mainMenu(const std::string &user_file, const std::string &profile_file, std::map<int, bool> &perms,
               const std::string &user, const std::string &profile, const std::string &file) {
 
     int option = -1;
     while (option != 0) {
-        std::cout << "\n1) Administrar usuarios\n2) Multiplicar Matrices NXN\n3) Juego\n4) Test palindrome\n5) Ejecutar f(x) = x^2 + 2x + g\n6) Conteo sobre texto\n7) Conteo sobre archivo\n0) Salir\nIngresar opcion: ";
-        std::cin >> std::noskipws >> option;
-        while (!std::cin || option <= -1 || option > 7) {
-            std::cout << "\nERROR! Ingresar valor numerico valido.";
-            std::cout << "\n1) Administrar usuarios\n2) Multiplicar Matrices NXN\n3) Juego\n4) Test palindrome\n5) Ejecutar f(x) = x^2 + 2x + g\n6) Conteo sobre texto\n7) Conteo sobre archivo\n0) Salir\nIngresar opcion: ";
-            sanitizeStream();
-            std::cin >> std::noskipws >> option;
+        mostrarMenu(user, profile);
+        if (!leerOpcion(option)) {
+            std::cout << "\nEntrada finalizada. Saliendo del sistema.\n";
+            return;
         }
 
-        sanitizeStream();
-        //std::cout << "option: " << option << "\n";
         if (option == 1 && perms.find(option) != perms.end()) {
             llamarAdminUsuarios(user_file, profile_file); // ejecuta ./bin/user_admin con system()
         }
@@ -142,4 +170,5 @@ void mainMenu(const std::string &user_file, const std::string &profile_file, std
             opcionConteoArchivo();
         }
     }
+    std::cout << "\nSaliendo del sistema. Hasta luego!\n";
 }
