@@ -217,33 +217,33 @@ Ambos conjuntos se mantienen en memoria como **arreglos dinámicos de structs** 
 ---
 ## 7. Estructura del repositorio
 ```
-parasigma
-	src
-	include
-	programs
-		conteo
-			src
-			include
-			rules.mk
-		function
-			...
-		matrix_multiplier
-			...
-		palindromo
-			...
-		user_manager
-			...
-	out
-		conteo
-		function
-		matrix_multiplier
-		palindromo
-		user_manager
-	data
-		PERFILES.txt
-		USUARIOS.txt
-		...
-	.env
-	Makefile
-	README.md
+parasigma/
+├── src
+├── include
+├── programs/
+│   ├── conteo/
+│   │   ├── src
+│   │   ├── include
+│   │   └── rules.mk
+│   ├── function/
+│   │   └── ...
+│   ├── matrix_multiplier/
+│   │   └── ...
+│   ├── palindromo/
+│   │   └── ...
+│   └── user_manager/
+│       └── ...
+├── out/
+│   ├── conteo
+│   ├── function
+│   ├── matrix_multiplier
+│   ├── palindromo
+│   └── user_manager
+├── data/
+│   ├── PERFILES.txt
+│   ├── USUARIOS.txt
+│   └── ...
+├── .env
+├── Makefile
+└── README.md
 ```
