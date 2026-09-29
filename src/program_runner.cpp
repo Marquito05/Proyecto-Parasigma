@@ -5,7 +5,7 @@
 #include <iostream>
 #include <string>
 #include <cstdlib> // system()
-#include <sys/wait.h> // WIFSIGNALED, WTERMSIG, WEXITSTATUS
+#include <sys/wait.h> // WIFSEXITED, WEXITSTATUS
 
 // Rodea el argumento con comillas simples: texto -> 'texto'
 // Dentro de comillas simples la shell NO interpreta caracteres especiales (; | & $ > espacios, etc.),
@@ -27,17 +27,8 @@ bool argumentoSeguro(const std::string &argumento) {
 
 // Ejecuta un comando con system() y revisa cómo terminó el programa llamado.
 int ejecutarPrograma(const std::string &comando) {
-    // Prueba 1: system(NULL) retorna 0 si no hay una shell disponible para ejecutar comandos
-    if (system(NULL) == 0) {
-        std::cout << "ERROR! No hay una shell disponible para ejecutar programas.\n";
-        return -1;
-    }
-
     std::cout << "\n[Menu] Ejecutando: " << comando << "\n";
-
-    // Se vacia el buffer de salida antes de crear el proceso hijo,
-    // para que los mensajes del menú y los del programa llamado aparezcan en orden
-    std::cout.flush();
+    std::cout.flush(); // el mensaje sale antes de que el otro programa empiece a escribir
 
     // system() crea un proceso hijo que ejecuta el comando en la shell (/bin/sh)
     // y el menú queda esperando hasta que ese proceso termine
@@ -149,25 +140,74 @@ void llamarMultiplicador(const std::string &usuario, const std::string &perfil) 
     getline(std::cin, pausa);
 }
 
-void llamarPalindrome() {
-    std::string programa = leerVariableEnv("PALINDROME_PROGRAM");
+
+void llamarPalindromo() {
+    // La ruta del programa se define en el .env
+    std::string programa = leerVariableEnv("PALINDROMO_PROGRAM");
     if (programa.empty()) {
-        std::cout << "ERROR! Falta la variable PALINDROME_PROGRAM en el archivo '.env'.\n";
+        std::cout << "ERROR! Falta la variable PALINDROMO_PROGRAM en el archivo .env.\n";
         return;
     }
 
-    std::string comando = protegerArgumento(programa);
-    ejecutarPrograma(comando);
+    if (!argumentoSeguro(programa)) {
+        std::cout << "ERROR! La ruta del .env no puede contener comillas simples (').\n";
+        return;
+    }
+
+    // Comando que se ejecuta:  './bin/palindromo'
+    ejecutarPrograma(protegerArgumento(programa));
 }
 
+
 void llamarFx() {
-    std::string programa = leerVariableEnv("FX_PROGRAM");
+    // La ruta del programa se define en el .env
+    std::string programa = leerVariableEnv("FUNCION_PROGRAM");
     if (programa.empty()) {
-        std::cout << "ERROR! Falta la variable FX_PROGRAM en el archivo '.env'.\n";
+        std::cout << "ERROR! Falta la variable FUNCION_PROGRAM en el archivo .env.\n";
         return;
     }
 
-    std::string comando = protegerArgumento(programa);
-    ejecutarPrograma(comando);
+    if (!argumentoSeguro(programa)) {
+        std::cout << "ERROR! La ruta del .env no puede contener comillas simples (').\n";
+        return;
+    }
 
+    // Comando que se ejecuta:  './bin/funcion_fx'
+    ejecutarPrograma(protegerArgumento(programa));
+}
+
+void llamarConteoTexto(const std::string &archivo) {
+    // La ruta del programa se define en el .env
+    std::string programa = leerVariableEnv("CONTEO_PROGRAM");
+    if (programa.empty()) {
+        std::cout << "ERROR! Falta la variable CONTEO_PROGRAM en el archivo .env.\n";
+        return;
+    }
+
+    if (!argumentoSeguro(programa) || !argumentoSeguro(archivo)) {
+        std::cout << "ERROR! Las rutas no pueden estar vacias ni contener comillas simples (').\n";
+        return;
+    }
+
+    // Comando que se ejecuta:  './bin/conteo' 'archivo'
+    ejecutarPrograma(protegerArgumento(programa) + " " + protegerArgumento(archivo));
+}
+
+
+void llamarConteoArchivo() {
+    std::cout << "estoy dentro\n";
+    // La ruta del programa se define en el .env
+    std::string programa = leerVariableEnv("CONTEO_PROGRAM");
+    if (programa.empty()) {
+        std::cout << "ERROR! Falta la variable CONTEO_PROGRAM en el archivo .env.\n";
+        return;
+    }
+
+    if (!argumentoSeguro(programa)) {
+        std::cout << "ERROR! La ruta del .env no puede contener comillas simples (').\n";
+        return;
+    }
+
+    // Comando que se ejecuta:  './bin/conteo'
+    ejecutarPrograma(protegerArgumento(programa));
 }

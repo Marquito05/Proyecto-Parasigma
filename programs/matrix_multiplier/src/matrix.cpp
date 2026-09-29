@@ -108,18 +108,9 @@ int leerMatriz(const string &ruta, char separador, Matriz &matriz) {
         for (int j = 0; j < (int) elementos.size(); j++) {
             string elemento = quitarEspacios(elementos[j]);
 
-            if (elemento.empty()) {
-                cout << "ERROR! Archivo " << ruta << ", línea " << numeroLinea << ": el elemento " << (j + 1) << " esta vacío.\n";
-                cout << "Revise que no haya dos separadores seguidos ni un separador al inicio o al final de la linea.\n";
-                archivo.close();
-                return ERROR_FORMATO;
-            }
-
             if (!esNumero(elemento)) {
                 cout << "ERROR! Archivo " << ruta << ", linea " << numeroLinea << ": el elemento '" << elemento << "' no es un numero valido.\n";
-                cout << "Revise que el separador del archivo sea '" << separador << "' y que los decimales usen punto (ej: 2.5).\n";
-                archivo.close();
-                return ERROR_FORMATO;
+                cout << "Revise que el separador sea '" << separador << "', que no sobren separadores y que los decimales usen punto (ej: 2.5).\n";     
             }
 
             // stod convierte el texto a numero real; lanza una excepción si el numero es demasiado grande
@@ -146,14 +137,7 @@ int leerMatriz(const string &ruta, char separador, Matriz &matriz) {
         matriz.datos.push_back(fila);
         matriz.filas++;
     }
-
-    // bad() indica que hubo un error al leer (por ejemplo, la ruta es una carpeta y no un archivo)
-    if (archivo.bad()) {
-        cout << "ERROR! No se pudo leer el archivo: " << ruta << "\n";
-        cout << "Revise que la ruta sea un archivo de texto y no una carpeta.\n";
-        archivo.close();
-        return ERROR_ARCHIVO;
-    }
+    
     archivo.close();
 
     if (matriz.filas == 0) {

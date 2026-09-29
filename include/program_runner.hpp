@@ -19,7 +19,13 @@ void llamarAdminUsuarios(const std::string &userFile, const std::string &profile
 // pide rutas de matrices y el separador, y llama al multiplicador
 void llamarMultiplicador(const std::string &usuario, const std::string &perfil);
 
-void llamarPalindrome();
+void llamarPalindromo();
 void llamarFx();
+
+// cuenta el archivo recibido con -f (opcion 6)
+void llamarConteoTexto(const std::string &archivo);
+
+// abre el conteo para que pida la ruta de un archivo (opcion 7)
+void llamarConteoArchivo();
 
 #endif

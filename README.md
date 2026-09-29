@@ -51,7 +51,7 @@ Sobre ambas entidades la aplicación permite **ingresar, listar y eliminar** reg
 
 | Requisito | Detalle |
 |---|---|
-| Compilador | `g++` con soporte para **C++17** (por el uso de `<filesystem>`) |
+| Compilador | `g++` 13 o superior (el Makefile usa `-std=c++23`; con g++ 11/12 cambiar a `-std=c++2b`) y `make` |
 | Sistema operativo | Linux |
 
 Verificar la versión disponible:
@@ -75,38 +75,59 @@ cd <CARPETA-DEL-REPOSITORIO>
 
 
 ```bash
-g++ -std=c++17 -Wall -o main main.cpp utils.cpp env_config.cpp user_repository.cpp profile_repository.cpp
+make
 ```
 
 ### 3.3 Ejecutar
 
+El sistema recibe **argumentos de ejecución**:
+
+| Argumento | Descripción |
+|---|---|
+| `-u` | Nombre de usuario |
+| `-p` | Password |
+| `-f` | Ruta del archivo de texto que analiza la opción 6 |
+
 ```bash
-./main    
+./bin/main -u lvc -p 1001 -f "/home/lvc/archivo.txt"
 ```
 
-En el primer arranque, si no existe el archivo `.env`, la aplicación lo crea automáticamente apuntando a `USUARIOS.TXT` y `PERFILES.TXT` dentro del directorio de trabajo actual. También crea ambos archivos de datos si no existen, dejando `PERFILES.TXT` con los dos perfiles por defecto del enunciado:
+Los tres argumentos son obligatorios. Si falta alguno, si un argumento está repetido, vacío o es desconocido, el programa muestra un mensaje de error con el uso correcto y termina sin abrir el menú. Si el usuario o el password no son válidos, muestra un error de autenticación y termina.
+
+> **Importante:** la aplicación busca `.env` en el **directorio desde el cual se ejecuta**. Ejecutar siempre desde la carpeta del proyecto (`make` deja los ejecutables en `bin/`).
+
+### 3.4 Menú principal
+
+La interfaz muestra un título, el **usuario** y su **perfil**, y luego las opciones:
 
 ```
-ADMIN;0,1,2,3,4
-GENERAL;0,1,3
+1) Administrar usuarios y perfiles  (según permisos del perfil; llama a ./bin/user_admin)
+2) Multiplicar matrices NxM         (según permisos del perfil; llama a ./bin/multi)
+3) Juego                            (en construcción)
+4) Es palindromo?                   (llama a ./bin/palindromo)
+5) Calcular f(x) = x*x + 2x + 8     (llama a ./bin/funcion_fx)
+6) Conteo sobre texto (archivo -f)  (llama a ./bin/conteo con el archivo de -f)
+7) Conteo sobre archivo             (llama a ./bin/conteo, que pide la ruta)
+0) Salir
 ```
 
-> **Importante:** la aplicación busca `.env` en el **directorio desde el cual se ejecuta**, no en el directorio del binario. Ejecutar siempre desde la carpeta del proyecto.
+#### Opciones 6 y 7: conteo sobre texto / archivo
 
-### 3.4 Navegación
+Las dos opciones ejecutan el programa `bin/conteo` con `system()`. Muestran un resumen con **vocales, consonantes, caracteres especiales y palabras**, y luego esperan Enter para **VOLVER** al menú.
 
-```
-Menú principal
-  0) Salir
-  1) Gestionar usuarios  ->  0) Regresar
-                             1) Ingresar usuarios
-                             2) Listar usuarios
-                             3) Eliminar usuarios
-  2) Gestionar perfiles  ->  0) Regresar
-                             1) Ingresar perfil
-                             2) Listar perfiles
-                             3) Eliminar perfil
-```
+- **Opción 6** analiza el archivo indicado con `-f`.
+- **Opción 7** pide una ruta de archivo (vacío para volver). Acepta rutas con comillas y rutas de Windows (`C:\Users\...` se convierte a `/mnt/c/Users/...` en WSL).
+
+Criterios de conteo:
+
+- Vocales: `a e i o u` con o sin tilde/diéresis, en mayúscula o minúscula. Consonantes: el resto de las letras (incluye `ñ`).
+- Caracteres especiales: todo lo que no es letra, dígito ni espacio (puntuación, símbolos, `¿ ¡`, etc.).
+- Palabras: secuencias separadas por espacios que contienen al menos una letra o dígito.
+- Lee archivos UTF-8 y, si encuentra bytes que no son UTF-8 válido, los interpreta como Latin-1.
+
+Errores controlados (se muestra el mensaje y se vuelve al menú, sin cerrar el programa): ruta vacía, archivo inexistente, ruta que es una carpeta o no es un archivo regular, sin permisos de lectura, archivo binario (contiene bytes nulos) y errores de lectura. Un archivo vacío se informa con un aviso y conteos en cero.
+
+Cualquier opción inválida en el menú (letras, negativos, fuera de rango) muestra un error y vuelve a pedir la opción. Si se cierra la entrada (Ctrl+D) el programa termina limpiamente.
 
 ---
 
@@ -120,6 +141,9 @@ La configuración se define en el archivo **`.env`**, ubicado en la raíz del pr
 | `PERFIL_FILE` | Ruta de archivo | Ruta **absoluta o relativa** al archivo de texto donde se persisten los perfiles y sus permisos. Cada perfil ocupa una línea. Si el archivo no existe, se crea con los perfiles `ADMIN` y `GENERAL` por defecto. | `PERFILES.TXT` en el directorio de ejecución |
 | `USER_ADMIN_PROGRAM` | Ruta de ejecutable | Programa que abre la opción 1 del menú principal (administrador de usuarios y perfiles). El menú lo ejecuta con `system()`. Si falta, el menú muestra un error. | Sin valor por defecto; en el `.env` del repositorio: `./bin/user_admin` |
 | `MULTI_PROGRAM` | Ruta de ejecutable | Programa que abre la opción 2 del menú principal (multiplicador de matrices). El menú lo ejecuta con `system()`. Si falta, el menú muestra un error. | Sin valor por defecto; en el `.env` del repositorio: `./bin/multi` |
+| `PALINDROMO_PROGRAM` | Ruta de ejecutable | Programa que abre la opción 4 del menú principal (¿es palíndromo?). El menú lo ejecuta con `system()`. Si falta, el menú muestra un error. | Sin valor por defecto; en el `.env` del repositorio: `./bin/palindromo` |
+| `FUNCION_PROGRAM` | Ruta de ejecutable | Programa que abre la opción 5 del menú principal (cálculo de f(x)). El menú lo ejecuta con `system()`. Si falta, el menú muestra un error. | Sin valor por defecto; en el `.env` del repositorio: `./bin/funcion_fx` |
+| `CONTEO_PROGRAM` | Ruta de ejecutable | Programa que abren las opciones 6 y 7 del menú principal (conteo sobre texto y sobre archivo). El menú lo ejecuta con `system()`. Si falta, el menú muestra un error. | Sin valor por defecto; en el `.env` del repositorio: `./bin/conteo` |
 
 **Ejemplo de `.env` con rutas relativas:**
 
@@ -128,6 +152,9 @@ USER_FILE=USUARIOS.TXT
 PERFIL_FILE=PERFILES.TXT
 USER_ADMIN_PROGRAM=./bin/user_admin
 MULTI_PROGRAM=./bin/multi
+PALINDROMO_PROGRAM=./bin/palindromo
+FUNCION_PROGRAM=./bin/funcion_fx
+CONTEO_PROGRAM=./bin/conteo
 ```
 
 **Ejemplo con rutas absolutas:**

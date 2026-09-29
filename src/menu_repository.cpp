@@ -99,16 +99,35 @@ bool userProfileSearch(const std::string &user_file, const std::string &profile_
 }
 
 
+static void mostrarMenu(const std::string &user, const std::string &profile) {
+    std::cout << "\n========================================\n"
+              << "          MENU PRINCIPAL - SistOpe\n"
+              << "========================================\n"
+              << "Usuario: " << user << "\n"
+              << "Perfil:  " << profile << "\n"
+              << "----------------------------------------\n"
+              << "1) Administrar usuarios y perfiles\n"
+              << "2) Multiplicar matrices NxM\n"
+              << "3) Juego\n"
+              << "4) Es palindromo?\n"
+              << "5) Calcular f(x) = x*x + 2x + 8\n"
+              << "6) Conteo sobre texto (archivo -f)\n"
+              << "7) Conteo sobre archivo\n"
+              << "0) Salir\n"
+              << "----------------------------------------\n"
+              << "Ingresar opcion: ";
+}
+
 void mainMenu(const std::string &user_file, const std::string &profile_file, std::map<int, bool> &perms,
-              const std::string &user, const std::string &profile) {
+              const std::string &user, const std::string &profile, const std::string &file) {
 
     int option = -1;
     while (option != 0) {
-        std::cout << "\n1) Administrar usuarios\n2) Multiplicar Matrices NXN\n3) Juego\n4) Test palindrome\n5) Ejecutar f(x) = x^2 + 2x + g\n6) Conteo sobre texto\n0) Salir\nIngresar opcion: ";
+        mostrarMenu(user, profile);
         std::cin >> std::noskipws >> option;
-        while (!std::cin || option <= -1 || option > 6) {
+        while (!std::cin || option <= -1 || option > 7) {
             std::cout << "\nERROR! Ingresar valor numerico valido.";
-            std::cout << "\n1) Administrar usuarios\n2) Multiplicar Matrices NXN\n3) Juego\n4) Test palindrome\n5) Ejecutar f(x) = x^2 + 2x + g\n6) Conteo sobre texto\n0) Salir\nIngresar opcion: ";
+            mostrarMenu(user, profile);
             sanitizeStream();
             std::cin >> std::noskipws >> option;
         }
@@ -125,20 +144,28 @@ void mainMenu(const std::string &user_file, const std::string &profile_file, std
         }
         else if (option == 2 && perms.find(option) == perms.end()) std::cout << "Usuario no tiene permisos para este modulo." << '\n';
 
-        else if (option == 3) {
+        else if (option == 3 ) {
             std::cout << "Opcion en construccion!" << '\n';
         }
-        else if (option == 4) {
-            llamarPalindrome();
+
+        else if (option == 4 && perms.find(option) != perms.end()) {
+            llamarPalindromo();
         }
-        else if (option == 5) {
+        else if (option == 4 && perms.find(option) == perms.end()) std::cout << "Usuario no tiene permisos para este modulo." << '\n';
+
+        else if (option == 5 && perms.find(option) != perms.end()) {
             llamarFx();
         }
-        else if (option == 6) {
-            std::cout << "Opcion en construccion!" << '\n';
+        else if (option == 5 && perms.find(option) == perms.end()) std::cout << "Usuario no tiene permisos para este modulo." << '\n';
+
+        else if (option == 6 && perms.find(option) != perms.end()) {
+            llamarConteoTexto(file);
         }
-        else if (option == 7) {
-            std::cout << "Opcion en construccion!" << '\n';
+        else if (option == 6 && perms.find(option) == perms.end()) std::cout << "Usuario no tiene permisos para este modulo." << '\n';
+
+        else if (option == 7 && perms.find(option) != perms.end()) {
+            llamarConteoArchivo();
         }
+        else if (option == 7 && perms.find(option) == perms.end()) std::cout << "Usuario no tiene permisos para este modulo." << '\n';
     }
 }
