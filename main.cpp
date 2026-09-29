@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
     string USER_FILE, PROFILE_FILE;
     if (environmentVars(USER_FILE, PROFILE_FILE)) {
         if (userProfileSearch(USER_FILE, PROFILE_FILE, usr, pswd, perms, profile)) {
-            mainMenu(USER_FILE, PROFILE_FILE, perms, usr, profile, file);
+            mainMenu(USER_FILE, PROFILE_FILE, perms, usr, profile);
         }
     }
 }

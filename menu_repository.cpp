@@ -1,6 +1,5 @@
 #include "../include/utils.hpp"
 #include "../include/program_runner.hpp"
-#include "../include/conteo.hpp"
 
 #include <filesystem>
 #include <fstream>
@@ -101,15 +100,15 @@ bool userProfileSearch(const std::string &user_file, const std::string &profile_
 
 
 void mainMenu(const std::string &user_file, const std::string &profile_file, std::map<int, bool> &perms,
-              const std::string &user, const std::string &profile, const std::string &file) {
+              const std::string &user, const std::string &profile) {
 
     int option = -1;
     while (option != 0) {
-        std::cout << "\n1) Administrar usuarios\n2) Multiplicar Matrices NXN\n3) Juego\n4) Test palindrome\n5) Ejecutar f(x) = x^2 + 2x + g\n6) Conteo sobre texto\n7) Conteo sobre archivo\n0) Salir\nIngresar opcion: ";
+        std::cout << "\n1) Administrar usuarios\n2) Multiplicar Matrices NXN\n3) Juego\n4) Test palindrome\n5) Ejecutar f(x) = x^2 + 2x + g\n6) Conteo sobre texto\n0) Salir\nIngresar opcion: ";
         std::cin >> std::noskipws >> option;
-        while (!std::cin || option <= -1 || option > 7) {
+        while (!std::cin || option <= -1 || option > 6) {
             std::cout << "\nERROR! Ingresar valor numerico valido.";
-            std::cout << "\n1) Administrar usuarios\n2) Multiplicar Matrices NXN\n3) Juego\n4) Test palindrome\n5) Ejecutar f(x) = x^2 + 2x + g\n6) Conteo sobre texto\n7) Conteo sobre archivo\n0) Salir\nIngresar opcion: ";
+            std::cout << "\n1) Administrar usuarios\n2) Multiplicar Matrices NXN\n3) Juego\n4) Test palindrome\n5) Ejecutar f(x) = x^2 + 2x + g\n6) Conteo sobre texto\n0) Salir\nIngresar opcion: ";
             sanitizeStream();
             std::cin >> std::noskipws >> option;
         }
@@ -136,10 +135,10 @@ void mainMenu(const std::string &user_file, const std::string &profile_file, std
             std::cout << "Opcion en construccion!" << '\n';
         }
         else if (option == 6) {
-            opcionConteoTexto(file);
+            std::cout << "Opcion en construccion!" << '\n';
         }
         else if (option == 7) {
-            opcionConteoArchivo();
+            std::cout << "Opcion en construccion!" << '\n';
         }
     }
 }
