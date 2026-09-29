@@ -1,5 +1,10 @@
-#include "../include/args.hpp"
 #include <iostream>
+
+struct Argumentos {
+    std::string usuario;
+    std::string password;
+    std::string archivo;
+};
 
 void mostrarUso(const std::string &programa) {
     std::cerr << "Uso: " << programa << " -u <usuario> -p <password> -f <archivo>\n"
