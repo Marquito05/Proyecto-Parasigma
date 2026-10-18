@@ -4,7 +4,11 @@
 #include <string>
 
 // Argumentos de ejecución: -u (usuario), -p (password), -f (archivo)
-struct Argumentos;
+struct Argumentos {
+    std::string usuario;
+    std::string password;
+    std::string archivo;
+};
 
 // Declaraciones de funciones
 void mostrarUso(const std::string &programa);
