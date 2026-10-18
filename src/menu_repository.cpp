@@ -127,6 +127,10 @@ void mainMenu(const std::string &user_file, const std::string &profile_file, std
         mostrarMenu(user, profile);
         std::cin >> std::noskipws >> option;
         while (!std::cin || option <= -1 || option > 8) {
+            if (std::cin.eof()) { // Ctrl+D: la entrada se cerró, no se puede leer mas
+                std::cout << "\nEntrada cerrada. Saliendo del menu.\n";
+                return;
+            }
             std::cout << "\nERROR! Ingresar valor numerico valido.";
             mostrarMenu(user, profile);
             sanitizeStream();
