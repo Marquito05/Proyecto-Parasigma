@@ -1,2 +1,6 @@
 out
 bin
+
+# Archivos que genera el índice invertido (opción 8): no se versionan
+data/mapa_libros.txt
+data/indice_invertido.idx

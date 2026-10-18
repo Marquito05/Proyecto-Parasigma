@@ -211,3 +211,26 @@ void llamarConteoArchivo() {
     // Comando que se ejecuta:  './bin/conteo'
     ejecutarPrograma(protegerArgumento(programa));
 }
+
+// Opcion 8 del menu: crea el indice invertido de los libros usando threads (entrega 3)
+void llamarIndiceInvertido() {
+    // La ruta del programa se define en el .env
+    std::string programa = leerVariableEnv("INDICE_PROGRAM");
+    if (programa.empty()) {
+        std::cout << "ERROR! Falta la variable INDICE_PROGRAM en el archivo .env.\n";
+        return;
+    }
+
+    if (!argumentoSeguro(programa)) {
+        std::cout << "ERROR! La ruta del .env no puede contener comillas simples (').\n";
+        return;
+    }
+
+    // Comando que se ejecuta:  './bin/indice_invertido'
+    ejecutarPrograma(protegerArgumento(programa));
+
+    // Pausa para alcanzar a leer el resumen antes de que vuelva a aparecer el menu
+    std::cout << "\nPresione ENTER para volver al menu principal...";
+    std::string pausa;
+    getline(std::cin, pausa);
+}

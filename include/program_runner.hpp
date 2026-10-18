@@ -28,4 +28,7 @@ void llamarConteoTexto(const std::string &archivo);
 // abre el conteo para que pida la ruta de un archivo (opcion 7)
 void llamarConteoArchivo();
 
+// crea el indice invertido de los libros usando threads (opcion 8, entrega 3)
+void llamarIndiceInvertido();
+
 #endif

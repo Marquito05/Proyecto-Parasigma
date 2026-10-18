@@ -16,7 +16,10 @@ Docente: Dr. Luis Veas-Castillo
 - [5. Formato de los archivos de datos](#5-formato-de-los-archivos-de-datos)
 - [6. Estructuras de datos](#6-estructuras-de-datos)
 - [7. Estructura del repositorio](#7-estructura-del-repositorio)
+- [8. Índice invertido paralelo (Entrega 3 - Problema 1)](#8-índice-invertido-paralelo-entrega-3---problema-1)
 ## 1. Propósito de la aplicación
+> **Entrega 3:** se agregó la opción **8) Crear índice invertido**, que construye el índice invertido de los libros usando una cola de trabajo, varios threads y semáforos. Ver la [sección 8](#8-índice-invertido-paralelo-entrega-3---problema-1).
+
 Este repositorio contiene el primer módulo del sistema **SistOpe**: el **Administrador de Usuarios y Perfiles**.
 Es una aplicación de consola escrita en C++ que permite gestionar las dos entidades base sobre las que se construirán los módulos siguientes del curso:
 - **Usuarios** - personas que podrán operar el sistema. Cada usuario queda asociado a un perfil.
@@ -87,7 +90,9 @@ La interfaz muestra un título, el **usuario** y su **perfil**, y luego las opci
 
 7) Conteo sobre archivo             (llama a ./bin/conteo, que pide la ruta)
 
-8) Salir
+8) Crear indice invertido           (según permisos del perfil; llama a ./bin/indice_invertido, ver sección 8)
+
+0) Salir
 ```
 
 #### Opciones 6 y 7: conteo sobre texto / archivo
@@ -118,6 +123,11 @@ La configuración se define en el archivo **`.env`**, ubicado en la raíz del pr
 | `PALINDROMO_PROGRAM` | Ruta de ejecutable | Programa que abre la opción 4 del menú principal (¿es palíndromo?). El menú lo ejecuta con `system()`. Si falta, el menú muestra un error.                                                                                     | Sin valor por defecto; en el `.env` del repositorio: `./bin/palindromo` |
 | `FX_PROGRAM`         | Ruta de ejecutable | Programa que abre la opción 5 del menú principal (cálculo de f(x)). El menú lo ejecuta con `system()`. Si falta, el menú muestra un error.                                                                                     | Sin valor por defecto; en el `.env` del repositorio: `./bin/funcion_fx` |
 | `CONTEO_PROGRAM`     | Ruta de ejecutable | Programa que abren las opciones 6 y 7 del menú principal (conteo sobre texto y sobre archivo). El menú lo ejecuta con `system()`. Si falta, el menú muestra un error.                                                          | Sin valor por defecto; en el `.env` del repositorio: `./bin/conteo`     |
+| `INDICE_PROGRAM`     | Ruta de ejecutable | Programa que abre la opción 8 del menú principal (crear índice invertido). El menú lo ejecuta con `system()`. Si falta, el menú muestra un error. | Sin valor por defecto; en el `.env` del repositorio: `./bin/indice_invertido` |
+| `LIBROS_DIR`         | Ruta de carpeta    | Carpeta con los libros (`.txt`) con los que se construye el índice invertido. Se recorre también por subcarpetas. Debe existir y poder leerse. | Sin valor por defecto; en el `.env` del repositorio: `data/LIBROS` |
+| `MAPA_LIBROS_FILE`   | Ruta de archivo    | Archivo donde se guarda la asociación **ID ↔ libro** (`1;nombre.txt`). Su carpeta debe existir. | Sin valor por defecto; en el `.env` del repositorio: `data/mapa_libros.txt` |
+| `INDICE_FILE`        | Ruta de archivo    | Archivo donde se guarda el **índice invertido** (`palabra;(id,cantidad);...`). Su carpeta debe existir. | Sin valor por defecto; en el `.env` del repositorio: `data/indice_invertido.idx` |
+| `N_THREADS`          | Número entero      | Cantidad de threads trabajadores que procesan los libros. Debe ser un entero entre 1 y 256. | Sin valor por defecto; en el `.env` del repositorio: `4` |
 
 **Ejemplo de `.env` con rutas relativas:**
 ```
@@ -128,6 +138,11 @@ MULTI_PROGRAM=./bin/multi
 PALINDROMO_PROGRAM=./bin/palindromo
 FX_PROGRAM=./bin/funcion_fx
 CONTEO_PROGRAM=./bin/conteo
+INDICE_PROGRAM=./bin/indice_invertido
+LIBROS_DIR=data/LIBROS
+MAPA_LIBROS_FILE=data/mapa_libros.txt
+INDICE_FILE=data/indice_invertido.idx
+N_THREADS=4
 ```
 
 **Ejemplo con rutas absolutas:**
@@ -227,6 +242,11 @@ parasigma/
 │   │   └── rules.mk
 │   ├── function/
 │   │   └── ...
+│   ├── indice_invertido/      (Entrega 3: índice invertido con threads, ver sección 8)
+│   │   ├── src
+│   │   ├── include
+│   │   ├── PARTE2.md
+│   │   └── rules.mk
 │   ├── matrix_multiplier/
 │   │   └── ...
 │   ├── palindromo/
@@ -240,6 +260,7 @@ parasigma/
 │   ├── palindromo
 │   └── user_manager
 ├── data/
+│   ├── LIBROS/                (libros .txt para el índice invertido, ver LIBROS_DIR)
 │   ├── PERFILES.txt
 │   ├── USUARIOS.txt
 │   └── ...
@@ -247,3 +268,84 @@ parasigma/
 ├── Makefile
 └── README.md
 ```
+
+---
+## 8. Índice invertido paralelo (Entrega 3 - Problema 1)
+
+### 8.1 Qué hace y cómo se ejecuta
+La opción **8) Crear indice invertido** del menú (requiere el permiso `8` en el perfil, por ejemplo `ADMIN`) ejecuta con `system()` el programa `bin/indice_invertido`. También se puede ejecutar directamente desde la carpeta raíz del proyecto:
+```bash
+make
+./bin/indice_invertido
+```
+El programa:
+1. lee y valida las variables del `.env`: `LIBROS_DIR`, `MAPA_LIBROS_FILE`, `INDICE_FILE` y `N_THREADS` (sección 4);
+2. revisa que la carpeta de libros exista y se pueda leer, y busca los archivos `.txt` (también en subcarpetas);
+3. asigna un ID a cada libro (en orden alfabético) y guarda la asociación en `MAPA_LIBROS_FILE`;
+4. pone todos los libros en la cola de trabajo;
+5. crea `N_THREADS` threads: cada uno saca libros de la cola y los procesa hasta que la cola queda vacía;
+6. espera a que todos los threads terminen (`join`), guarda el índice en `INDICE_FILE` y muestra un resumen.
+
+### 8.2 Flujo: cola → threads → semáforos → resultados → índice invertido
+```
+ thread principal                              N_THREADS threads trabajadores
+ ────────────────                              ──────────────────────────────
+ 1. valida el .env
+ 2. busca los libros (.txt) en LIBROS_DIR
+ 3. asigna IDs y guarda MAPA_LIBROS_FILE
+ 4. pone todos los libros en la COLA
+ 5. crea los N threads ──────────────────────► mientras queden libros en la cola:
+                                                  sacarLibro()        semáforo semCola
+                                                  procesarLibro()     semáforo del índice (PARTE 2)
+                                                  muestra el avance   semáforo semPantalla
+ 6. join() de los N threads ◄───────────────── la cola quedó vacía: el thread termina
+ 7. escribe el índice en INDICE_FILE
+ 8. muestra el resumen
+```
+
+- **Cola**: `std::queue<Libro>` con todos los libros (cada `Libro` tiene ID, nombre y ruta). Se llena antes de crear los threads. Cada libro se saca dentro de una sección crítica, así que un libro llega a un solo thread: nunca dos threads procesan el mismo libro.
+- **Threads**: se crean `N_THREADS` threads con `std::thread`. Cada uno ejecuta `hiloTrabajador()`: saca un libro, lo procesa y vuelve por otro mientras queden.
+- **Semáforos**: ver sección 8.3.
+- **Resultados → índice invertido** *(PARTE 2: completar)*: cada thread cuenta las palabras de su libro en un mapa local (sin semáforo, porque es memoria propia del thread) y después lo agrega al índice compartido dentro de la sección crítica del semáforo del índice. Al final, el thread principal escribe el índice en `INDICE_FILE`.
+
+### 8.3 Semáforos y secciones críticas
+Se usan semáforos POSIX (`sem_t`), creados en `main` con valor 1: `sem_wait` entra a la sección crítica (si otro thread está adentro, espera) y `sem_post` sale de ella.
+
+| Recurso compartido | Semáforo | Sección crítica |
+| --- | --- | --- |
+| Cola de libros | `semCola` | Sacar un libro de la cola (`sacarLibro`) |
+| Contador de libros procesados y pantalla | `semPantalla` | Sumar al contador y escribir el mensaje del avance |
+| Índice invertido | `indice.semaforo` | Agregar el conteo de un libro al índice *(PARTE 2)* |
+
+Agregar los libros a la cola no necesita semáforo, porque se hace antes de crear los threads, cuando solo existe el thread principal. Escribir el índice tampoco, porque se hace después del `join`.
+
+### 8.4 Término de los threads
+Como todos los libros se ponen en la cola antes de crear los threads, cuando un thread encuentra la cola vacía sabe que ya no queda trabajo y termina. El thread principal espera a todos con `join()` y recién después escribe el índice. El resumen final muestra las cuatro condiciones de la pauta, por ejemplo:
+```
+===== RESUMEN =====
+Libros pendientes en la cola: 0
+Libros procesados: 49 de 49
+Threads terminados: 4 de 4
+Indice invertido guardado en data/indice_invertido.idx
+```
+
+### 8.5 Archivos que genera
+- **`MAPA_LIBROS_FILE`**: asociación ID ↔ libro, una línea por libro:
+  ```
+  1;don_quijote.txt
+  2;el_hobbit.txt
+  ```
+- **`INDICE_FILE`**: el índice invertido. Cada palabra aparece una sola vez, con los libros donde aparece (por ID) y cuántas veces:
+  ```
+  computador;(1,15);(3,8);(7,21)
+  ```
+  *(PARTE 2: completar con la definición de palabra usada y un extracto real del índice generado.)*
+
+### 8.6 Archivos del programa (`programs/indice_invertido/`)
+| Archivo | Contenido | Parte |
+| --- | --- | --- |
+| `src/main.cpp` | Cola de trabajo, semáforos, threads, `join` y resumen | 1 |
+| `src/config.cpp` | Lectura y validación de las variables del `.env` | 1 |
+| `src/libros.cpp` | Revisión de la carpeta, IDs y mapa ID ↔ libro | 1 |
+| `src/indice.cpp` | Conteo de palabras y escritura del índice | 2 |
+| `PARTE2.md` | Guía para la Parte 2 | — |
