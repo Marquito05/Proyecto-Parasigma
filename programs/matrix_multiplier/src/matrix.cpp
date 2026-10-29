@@ -109,7 +109,7 @@ int leerMatriz(const string &ruta, char separador, Matriz &matriz) {
             string elemento = quitarEspacios(elementos[j]);
 
             if (!esNumero(elemento)) {
-                cout << "ERROR! Archivo " << ruta << ", linea " << numeroLinea << ": el elemento '" << elemento << "' no es un numero valido.\n";
+                cout << "ERROR! Archivo " << ruta << ", linea " << numeroLinea << ": el elemento '" << elemento << "' no es un número válido.\n";
                 cout << "Revise que el separador sea '" << separador << "', que no sobren separadores y que los decimales usen punto (ej: 2.5).\n";     
             }
 
@@ -117,8 +117,8 @@ int leerMatriz(const string &ruta, char separador, Matriz &matriz) {
             try {
                 fila.push_back(stod(elemento));
             } catch (...) {
-                cout << "ERROR! Archivo " << ruta << ", linea " << numeroLinea
-                     << ": el numero '" << elemento << "' es demasiado grande.\n";
+                cout << "ERROR! Archivo " << ruta << ", línea " << numeroLinea
+                     << ": el número '" << elemento << "' es demasiado grande.\n";
                 archivo.close();
                 return ERROR_FORMATO;
             }
