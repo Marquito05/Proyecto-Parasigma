@@ -36,8 +36,8 @@ int main(int argc, char* argv[]) {
 
     // 3. Validar el separador
     if (!separadorValido(textoSeparador)) {
-        cout << "ERROR! Separador invalido: '" << textoSeparador << "'.\n";
-        cout << "Debe ser un solo caracter y no puede ser un digito, un punto, un signo (+ -) ni un espacio.\n";
+        cout << "ERROR! Separador inválido: '" << textoSeparador << "'.\n";
+        cout << "Debe ser un solo caracter y no puede ser un dígito, un punto, un signo (+ -) ni un espacio.\n";
         return ERROR_ARGUMENTOS;
     }
     char separador = textoSeparador[0];
