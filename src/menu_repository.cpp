@@ -113,19 +113,20 @@ static void mostrarMenu(const std::string &user, const std::string &profile) {
               << "5) Calcular f(x) = x*x + 2x + 8\n"
               << "6) Conteo sobre texto (archivo -f)\n"
               << "7) Conteo sobre archivo\n"
+              << "8) Indice invertido\n"
               << "0) Salir\n"
               << "----------------------------------------\n"
               << "Ingresar opcion: ";
 }
 
 void mainMenu(const std::string &user_file, const std::string &profile_file, std::map<int, bool> &perms,
-              const std::string &user, const std::string &profile, const std::string &file) {
+              std::string &user, const std::string &profile, const std::string &file) {
 
     int option = -1;
     while (option != 0) {
         mostrarMenu(user, profile);
         std::cin >> std::noskipws >> option;
-        while (!std::cin || option <= -1 || option > 7) {
+        while (!std::cin || option <= -1 || option > 8) {
             std::cout << "\nERROR! Ingresar valor numerico valido.";
             mostrarMenu(user, profile);
             sanitizeStream();
@@ -144,9 +145,10 @@ void mainMenu(const std::string &user_file, const std::string &profile_file, std
         }
         else if (option == 2 && perms.find(option) == perms.end()) std::cout << "Usuario no tiene permisos para este modulo." << '\n';
 
-        else if (option == 3 ) {
-            std::cout << "Opcion en construccion!" << '\n';
+        else if (option == 3 && perms.find(option) != perms.end()) {
+            llamarJuego(user);
         }
+        else if (option == 3 && perms.find(option) == perms.end()) std::cout << "Usuario no tiene permisos para este modulo." << '\n';
 
         else if (option == 4 && perms.find(option) != perms.end()) {
             llamarPalindromo();
@@ -167,5 +169,10 @@ void mainMenu(const std::string &user_file, const std::string &profile_file, std
             llamarConteoArchivo();
         }
         else if (option == 7 && perms.find(option) == perms.end()) std::cout << "Usuario no tiene permisos para este modulo." << '\n';
+
+        else if (option == 8 && perms.find(option) != perms.end()) {
+            llamarIndiceInvertido(); 
+        }
+        else if (option == 8 && perms.find(option) == perms.end()) std::cout << "Usuario no tiene permisos para este modulo." << '\n';
     }
 }

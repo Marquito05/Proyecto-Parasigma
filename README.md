@@ -16,6 +16,7 @@ Docente: Dr. Luis Veas-Castillo · **Entrega 1**
 - [5. Formato de los archivos de datos](#5-formato-de-los-archivos-de-datos)
 - [6. Estructuras de datos](#6-estructuras-de-datos)
 - [7. Estructura del repositorio](#7-estructura-del-repositorio)
+- [8. Índice invertido paralelo](#8-índice-invertido-paralelo)
 ## 1. Propósito de la aplicación
 Este repositorio contiene el primer módulo del sistema **SistOpe**: el **Administrador de Usuarios y Perfiles**.
 Es una aplicación de consola escrita en C++ que permite gestionar las dos entidades base sobre las que se construirán los módulos siguientes del curso:
@@ -64,7 +65,10 @@ El sistema recibe **argumentos de ejecución**:
 
 Ejemplo con datos reales:
 ```bash
-./bin/main -u Mesmer -p 2893983 -f "data/1984.txt"
+./bin/main -u Mesmerize -p 2893983 -f "data/1984.txt"
+./bin/main -u Mesmer -p 21032190 -f "data/1984.txt"
+./bin/main -u DE -p lke -f "data/1984.txt"
+
 ```
 Los tres argumentos son obligatorios. Si falta alguno, si un argumento está repetido, vacío o es desconocido, el programa muestra un mensaje de error con el uso correcto y termina sin abrir el menú. Si el usuario o el password no son válidos, muestra un error de autenticación y termina.
 
@@ -77,7 +81,7 @@ La interfaz muestra un título, el **usuario** y su **perfil**, y luego las opci
 
 2) Multiplicar matrices NxM         (según permisos del perfil; llama a ./bin/multi)
 
-3) Juego                            (en construcción)
+3) Juego                            (llama a ./bin/game)
 
 4) Es palindromo?                   (llama a ./bin/palindromo)
 
@@ -87,7 +91,9 @@ La interfaz muestra un título, el **usuario** y su **perfil**, y luego las opci
 
 7) Conteo sobre archivo             (llama a ./bin/conteo, que pide la ruta)
 
-8) Salir
+8) Crear indice invertido           (según permisos del perfil; llama a ./bin/indice_invertido, ver sección 8)
+
+0) Salir
 ```
 
 #### Opciones 6 y 7: conteo sobre texto / archivo
@@ -117,7 +123,14 @@ La configuración se define en el archivo **`.env`**, ubicado en la raíz del pr
 | `MULTI_PROGRAM`      | Ruta de ejecutable | Programa que abre la opción 2 del menú principal (multiplicador de matrices). El menú lo ejecuta con `system()`. Si falta, el menú muestra un error.                                                                           | Sin valor por defecto; en el `.env` del repositorio: `./bin/multi`      |
 | `PALINDROMO_PROGRAM` | Ruta de ejecutable | Programa que abre la opción 4 del menú principal (¿es palíndromo?). El menú lo ejecuta con `system()`. Si falta, el menú muestra un error.                                                                                     | Sin valor por defecto; en el `.env` del repositorio: `./bin/palindromo` |
 | `FX_PROGRAM`         | Ruta de ejecutable | Programa que abre la opción 5 del menú principal (cálculo de f(x)). El menú lo ejecuta con `system()`. Si falta, el menú muestra un error.                                                                                     | Sin valor por defecto; en el `.env` del repositorio: `./bin/funcion_fx` |
+| `GAME_PROGRAM` | Ruta de ejecutable |  Programa que abre la opcion 3 del menú principal (Juego). El menú lo ejecuta con `system()`. Si falta, el menú muestra un error. | Sin valor por defecto; en el `.env` del repositorio: `./bin/game` |
 | `CONTEO_PROGRAM`     | Ruta de ejecutable | Programa que abren las opciones 6 y 7 del menú principal (conteo sobre texto y sobre archivo). El menú lo ejecuta con `system()`. Si falta, el menú muestra un error.                                                          | Sin valor por defecto; en el `.env` del repositorio: `./bin/conteo`     |
+| `INDICE_PROGRAM`     | Ruta de ejecutable | Programa que abre la opción 8 del menú principal (crear índice invertido). El menú lo ejecuta con `system()`. Si falta, el menú muestra un error. | Sin valor por defecto; en el `.env` del repositorio: `./bin/indice_invertido` |
+| `LIBROS_DIR`         | Ruta de carpeta    | Carpeta con los libros (`.txt`) con los que se construye el índice invertido. Se recorre también por subcarpetas. Debe existir y poder leerse. | Sin valor por defecto; en el `.env` del repositorio: `data/LIBROS` |
+| `MAPA_LIBROS_FILE`   | Ruta de archivo    | Archivo donde se guarda la asociación **ID ↔ libro** (`1;nombre.txt`). Su carpeta debe existir. | Sin valor por defecto; en el `.env` del repositorio: `data/mapa_libros.txt` |
+| `INDICE_FILE`        | Ruta de archivo    | Archivo donde se guarda el **índice invertido** (`palabra;(id,cantidad);...`). Su carpeta debe existir. | Sin valor por defecto; en el `.env` del repositorio: `data/indice_invertido.idx` |
+| `N_THREADS`          | Número entero      | Cantidad de threads trabajadores que procesan los libros. Debe ser un entero entre 1 y 256. | Sin valor por defecto; en el `.env` del repositorio: `4` |
+
 
 **Ejemplo de `.env` con rutas relativas:**
 ```
@@ -127,7 +140,13 @@ USER_ADMIN_PROGRAM=./bin/user_admin
 MULTI_PROGRAM=./bin/multi
 PALINDROMO_PROGRAM=./bin/palindromo
 FX_PROGRAM=./bin/funcion_fx
+GAME_PROGRAM=./bin/game
 CONTEO_PROGRAM=./bin/conteo
+INDICE_PROGRAM=./bin/indice_invertido
+LIBROS_DIR=data/LIBROS
+MAPA_LIBROS_FILE=data/mapa_libros.txt
+INDICE_FILE=data/indice_invertido.idx
+N_THREADS=4
 ```
 
 **Ejemplo con rutas absolutas:**
@@ -191,8 +210,78 @@ GENERAL;0,1,3
 ```
 Los números representan las opciones de menú que ese perfil podrá manipular en futuras entregas del sistema. El nombre del perfil se almacena siempre en mayúsculas y debe contener solo letras; los permisos deben ser enteros no negativos.
 
+## 6. Funcionamiento de subprogramas
+
+### 1. Juego (Sockets)
+
+### 1.1 Arquitectura (Juego)
+El juego utiliza una arquitectura de red-cliente servidor concurrente basada en TCP, empaquetada en dos modulos; Cliente y servidor, en donde el modulo servidor se encuentra en segundo plano a traves de hilos para el host.
+
+Cada instancia de cliente se encuentra conectada mediante un sock et TCP al servidor. Los clientes envian comandos y entradas de texto, como el nombre de usuario y pulsaciones de tecla `ENTER` para lanzar el dado. Este flujo de mensajes se procesa dinámicamente mediante un búfer de lineas delimitadas por `\n`
+
+Los sockets manejan la comunicación bidireccional asíncrona mediante llamadas de bajo nivel POSIX, como `socket`, `bind`, `listen`, `accept`, `connect`, `send` y `recv`. Las conexiones de lobby utilizan descriptores no bloqueantes como `O_NONBLOCK`.
+
+El servidor gestiona el registro de jugadores, valida nombres de usuario para rechazar multiples instancias de un mismo usuario, agrupa participantes en equipos de forma equitativa, ejecuta el bucle principal de rondas y turnos, controla condiciones de victoria y registra cada evento critico en un log (`game_log.txt`), el cual se encuentra en la carpeta raíz.
+
+El servidor mantiene todos los estados del juego (como puntajes, jugadores y equipos) en estructuras locales. El servidor aisla los turnos privados, enviando las señales `YOUR_TURN` / `WAIT_TURN` unicamente a los miembros correspondientes. Ademas, difunde resúmenes de puntajes globales a todos los participantes.
+
+Los logs tienen la siguiente estructura: `timestamp;jugador;equipo;accion;información`
+
+### 1.2 Reglas del juego
+El numero de jugadores se define al iniciar el servidor, configurable por el host. Este numero de jugadores es el minimo y el maximo para poder empezar la partida, y esta empieza apenas se cumpla este numero de jugadores. Si los jugadores se van durante la partida, este numero no afecta el desarrollo de este mismo y la partida seguira como si nada.
+
+Los jugadores conectados son distribuidos automáticamente en equipos según la cantidad de integrantes por equipo configurada anteriormente.
+
+La partida recorre los turnos de forma secuencial por equipos. Dentro de cada turno por equipo, todos los integrantes tendran su turno, y al final de este, el puntaje se añadira al total del equipo. El servidor notifica a cada miembro del equipo el turno actual.
+
+La unica acción permitida durante el desarrollo de la partida es presionar la tecla `Enter` para lanzar el dado. El servidor calcula automaticamente el valor aleatorio basado en el numero de caras configurado. Las acciones de lanzar dado y avanzar se registran en el log.
+
+Un equipo resulta ganador de la ronda actual al alcanzar el tamaño configurable del `tablero_meta`. El juego finaliza de forma definitiva cuando se completa el numero total de rondas establecidas, anunciando al equipo campeón y cerrando todas las conexiones de red.
+
+
+### 2. Índice invertido paralelo
+### 2.1 Qué hace y cómo se ejecuta
+La opción del menú correspondiente ejecuta mediante system() el programa bin/indice_invertido (o directamente desde la raíz ejecutando make y ./bin/indice_invertido). El programa valida el .env, procesa los .txt en LIBROS_DIR, asigna IDs guardando el mapeo en MAPA_LIBROS_FILE, llena la cola de trabajo, crea N_THREADS threads para procesar los textos en paralelo, espera su término (join) con semáforos POSIX (sem_t), y finalmente guarda el resultado en INDICE_FILE.
+
+### 2.2 Flujo
+ thread principal                          N_THREADS threads trabajadores
+ ────────────────                          ──────────────────────────────
+ 1. valida el .env
+ 2. busca los libros (.txt) en LIBROS_DIR
+ 3. asigna IDs y guarda MAPA_LIBROS_FILE
+ 4. pone todos los libros en la COLA
+ 5. crea los N threads ──────────────────────► mientras queden libros en la cola:
+                                               sacarLibro()       semáforo semCola
+                                               procesarLibro()    semáforo del índice
+                                               muestra el avance  semáforo semPantalla
+ 6. join() de los N threads ◄───────────────── la cola quedó vacía: el thread termina
+ 7. escribe el índice en INDICE_FILE
+ 8. muestra el resumen
+Cola: std::queue<Libro> con todos los libros. Se llena antes de crear los threads. Cada libro se saca dentro de una sección crítica de modo que un libro llega a un solo thread.
+
+Threads: se crean N_THREADS hilos con std::thread ejecutando hiloTrabajador() hasta vaciar la cola.
+
+Semáforos: creados con valor 1 (sem_wait entra, sem_post sale) para proteger los recursos compartidos:
+
+semCola: Cola de libros (sacarLibro).
+
+semPantalla: Contador de libros procesados y mensajes de avance.
+
+indice.semaforo: Fusión segura del mapa local de cada thread (std::map<std::string, int>) al índice global compartido (indice.palabras[palabra][id_libro] = cantidad).
+
+Escritura final: Al finalizar con join(), el thread principal ejecuta escribirIndice() sin requerir semáforo ya que no hay otros hilos activos.
+
+### 2.3 Término y archivos generados
+Al vaciar la cola, los threads terminan su ejecución, el thread principal hace join() y muestra el resumen (libros pendientes, procesados, threads terminados y ruta del índice).
+
+MAPA_LIBROS_FILE: Asociación ID ↔ libro (1;don_quijote.txt).
+
+INDICE_FILE: Índice invertido donde cada palabra aparece una sola vez junto a sus libros por ID y frecuencia (computador;(1,15);(3,8)).
+
+Definición de palabra: Secuencias de caracteres alfanuméricos en minúsculas con soporte para UTF-8 en español (tildes, diéresis y ñ). Todo lo demás actúa como delimitador.
+
 ---
-## 6. Estructuras de datos (`models.h`)
+## 7. Estructuras de datos (`models.h`)
 ```cpp
 struct User {
     int id;
@@ -215,7 +304,7 @@ Ambos conjuntos se mantienen en memoria como **arreglos dinámicos de structs** 
 - `std::map<int,int> id_table` - mapea *ID de usuario* → *posición en el arreglo*.
 - `std::map<std::string,int> name_table` - mapea *nombre de perfil* → *posición en el arreglo*.
 ---
-## 7. Estructura del repositorio
+## 8. Estructura del repositorio
 ```
 parasigma/
 ├── src
@@ -225,6 +314,10 @@ parasigma/
 │   │   ├── src
 │   │   ├── include
 │   │   └── rules.mk
+|   ├── game/
+|   |   └── ...
+|   ├── indice_invertido/
+|   |   └── ...
 │   ├── function/
 │   │   └── ...
 │   ├── matrix_multiplier/

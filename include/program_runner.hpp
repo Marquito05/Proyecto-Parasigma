@@ -28,4 +28,8 @@ void llamarConteoTexto(const std::string &archivo);
 // abre el conteo para que pida la ruta de un archivo (opcion 7)
 void llamarConteoArchivo();
 
+void llamarJuego(std::string &playerName);
+
+void llamarIndiceInvertido();
+
 #endif

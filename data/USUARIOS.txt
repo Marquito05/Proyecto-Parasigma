@@ -1,4 +1,7 @@
-987,lol,DE,lke,DE
+987,lol,DE,lke,ADMIN
 24,A,A,A,B
 1,Hola,Mesmer,21032190,ADMIN
 2,aaron,Mesmerize,2893983,ADMIN
+3,trin,trinomio,2893983,ADMIN
+4,marc,marquinhos,2893983,ADMIN
+2,agustin,agus,2893983,ADMIN

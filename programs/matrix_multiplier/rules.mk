@@ -3,7 +3,7 @@ MM_DIR = programs/matrix_multiplier
 MM_SRC = $(MM_DIR)/src
 MM_INC = $(MM_DIR)/include
 MM_OUT = $(OUT_DIR)/matrix_multiplier
-MM_EXEC = $(BIN_DIR)/multi
+MM_EXEC = $(BIN_DIR)/matrix_multiplier
 
 # Archivos
 MM_MAIN = $(MM_SRC)/main.cpp

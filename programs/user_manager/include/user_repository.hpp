@@ -2,7 +2,6 @@
 #define USER_REPOSITORY_HPP
 
 #include "profile_repository.hpp"
-#include "utils.hpp"
 #include "models.hpp"
 
 #include <map>

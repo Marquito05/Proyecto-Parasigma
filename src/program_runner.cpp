@@ -7,9 +7,9 @@
 #include <cstdlib> // system()
 #include <sys/wait.h> // WIFSEXITED, WEXITSTATUS
 
-// Rodea el argumento con comillas simples: texto -> 'texto'
-// Dentro de comillas simples la shell NO interpreta caracteres especiales (; | & $ > espacios, etc.),
-// así el programa llamado recibe el texto tal cual y nadie puede "colar" otro comando.
+/* Rodea el argumento con comillas simples: texto -> 'texto'
+ Dentro de comillas simples la shell NO interpreta caracteres especiales (; | & $ > espacios, etc.),
+ así el programa llamado recibe el texto tal cual y nadie puede "colar" otro comando. */
 std::string protegerArgumento(const std::string &argumento) {
     return "'" + argumento + "'";
 }
@@ -210,4 +210,43 @@ void llamarConteoArchivo() {
 
     // Comando que se ejecuta:  './bin/conteo'
     ejecutarPrograma(protegerArgumento(programa));
+}
+
+
+void llamarJuego(std::string &playerName) {
+    std::string programa = leerVariableEnv("GAME_PROGRAM");
+    if (programa.empty()) {
+        std::cout << "ERROR! Falta la variable GAME_PROGRAM en el archivo .env\n";
+        return;
+    }
+
+    if (!argumentoSeguro(programa) || !argumentoSeguro(playerName)) {
+        std::cout << "ERROR! La ruta del .env no puede contener comillas simples (').\n";
+        return;
+    }
+
+    playerName += "\n";
+    ejecutarPrograma(protegerArgumento(programa) + " " + protegerArgumento(playerName));
+}
+
+void llamarIndiceInvertido() {
+    // La ruta del programa se define en el .env
+    std::string programa = leerVariableEnv("INDICE_PROGRAM");
+    if (programa.empty()) {
+        std::cout << "ERROR! Falta la variable INDICE_PROGRAM en el archivo .env.\n";
+        return;
+    }
+
+    if (!argumentoSeguro(programa)) {
+        std::cout << "ERROR! La ruta del .env no puede contener comillas simples (').\n";
+        return;
+    }
+
+    // Comando que se ejecuta:  './bin/indice_invertido'
+    ejecutarPrograma(protegerArgumento(programa));
+
+    // Pausa para alcanzar a leer el resumen antes de que vuelva a aparecer el menu
+    std::cout << "\nPresione ENTER para volver al menu principal...";
+    std::string pausa;
+    getline(std::cin, pausa);
 }
