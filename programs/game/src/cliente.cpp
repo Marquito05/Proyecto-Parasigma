@@ -80,7 +80,7 @@ void ingresarCliente(const std::string &playerName) {
     getline(std::cin, IP);
     IP = get_trimmed_string(IP);
     while (IP.empty()) {
-        std::cout << "ERROR! Ingrese caracteres validos: ";
+        std::cout << "ERROR! Ingrese caracteres válidos: ";
         getline(std::cin, IP);
         IP = get_trimmed_string(IP);
     }
@@ -88,7 +88,7 @@ void ingresarCliente(const std::string &playerName) {
     std::cout << "Ingrese el puerto ('0' para puerto predeterminado): ";
     std::cin >> std::noskipws >> port; sanitizeStream();
     while (!std::cin || port < 0 ) {
-        std::cout << "\nPuerto no valido!" 
+        std::cout << "\nPuerto no válido!" 
                   << "\nIngrese el puerto ('0' para puerto predeterminado): ";
         std::cin >> std::noskipws >> port; sanitizeStream();
     }
