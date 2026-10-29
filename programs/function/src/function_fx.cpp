@@ -35,7 +35,7 @@ void menuFunction() {
             cin >> noskipws >> x;
 
             while (!std::cin) {
-                cout << "Ingrese un valor numerico!: ";
+                cout << "Ingrese un valor numérico!: ";
                 sanitizeStream();
                 cin >> noskipws >> x;
             }
