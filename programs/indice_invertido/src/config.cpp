@@ -45,7 +45,7 @@ bool cargarConfiguracion(ConfigIndice &config) {
         valido = config.nThreads >= 1 && config.nThreads <= MAX_THREADS;
     }
     if (!valido) {
-        std::cout << "ERROR! N_THREADS debe ser un numero entero entre 1 y " << MAX_THREADS << " (valor actual: "
+        std::cout << "ERROR! N_THREADS debe ser un número entero entre 1 y " << MAX_THREADS << " (valor actual: "
                   << threads << ")\n";
         return false;
     }
