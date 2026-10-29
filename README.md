@@ -244,7 +244,8 @@ Un equipo resulta ganador de la ronda actual al alcanzar el tamaño configurable
 La opción del menú correspondiente ejecuta mediante system() el programa bin/indice_invertido (o directamente desde la raíz ejecutando make y ./bin/indice_invertido). El programa valida el .env, procesa los .txt en LIBROS_DIR, asigna IDs guardando el mapeo en MAPA_LIBROS_FILE, llena la cola de trabajo, crea N_THREADS threads para procesar los textos en paralelo, espera su término (join) con semáforos POSIX (sem_t), y finalmente guarda el resultado en INDICE_FILE.
 
 ### 2.2 Flujo
- thread principal                          N_THREADS threads trabajadores
+ ```
+thread principal                          N_THREADS threads trabajadores
  ────────────────                          ──────────────────────────────
  1. valida el .env
  2. busca los libros (.txt) en LIBROS_DIR
@@ -257,6 +258,7 @@ La opción del menú correspondiente ejecuta mediante system() el programa bin/i
  6. join() de los N threads ◄───────────────── la cola quedó vacía: el thread termina
  7. escribe el índice en INDICE_FILE
  8. muestra el resumen
+```
 Cola: std::queue<Libro> con todos los libros. Se llena antes de crear los threads. Cada libro se saca dentro de una sección crítica de modo que un libro llega a un solo thread.
 
 Threads: se crean N_THREADS hilos con std::thread ejecutando hiloTrabajador() hasta vaciar la cola.
