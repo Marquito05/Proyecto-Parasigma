@@ -32,7 +32,7 @@ bool cpEsLetra(uint32_t c) {
     return false;
 }
 
-// Metodos de Contador 
+// Métodos de Contador 
 
 void Contador::caracter(uint32_t c) {
     if (c == 0xFEFF) return; // BOM
@@ -111,21 +111,21 @@ bool contarArchivo(const std::string &rutaOriginal, Conteo &resultado, std::stri
     try {
         const std::string ruta = normalizarRuta(rutaOriginal);
 
-        if (ruta.empty()) { error = "la ruta esta vacia."; return false; }
-        if (ruta.size() > 4096) { error = "la ruta es demasiado larga."; return false; }
-        if (ruta.find('\0') != std::string::npos) { error = "la ruta contiene caracteres invalidos."; return false; }
+        if (ruta.empty()) { error = "La ruta esta vacía."; return false; }
+        if (ruta.size() > 4096) { error = "La ruta es demasiado larga."; return false; }
+        if (ruta.find('\0') != std::string::npos) { error = "La ruta contiene caracteres inválidos."; return false; }
 
         std::error_code ec;
         std::filesystem::path p(ruta);
         if (!std::filesystem::exists(p, ec)) {
-            error = ec ? "no se pudo acceder a la ruta (" + ec.message() + ")." : "el archivo no existe.";
+            error = ec ? "No se pudo acceder a la ruta (" + ec.message() + ")." : "El archivo no existe.";
             return false;
         }
-        if (std::filesystem::is_directory(p, ec)) { error = "la ruta es una carpeta, no un archivo."; return false; }
-        if (!std::filesystem::is_regular_file(p, ec)) { error = "la ruta no es un archivo de texto regular."; return false; }
+        if (std::filesystem::is_directory(p, ec)) { error = "La ruta es una carpeta, no un archivo."; return false; }
+        if (!std::filesystem::is_regular_file(p, ec)) { error = "La ruta no es un archivo de texto regular."; return false; }
 
         std::ifstream in(ruta, std::ios::binary);
-        if (!in.is_open()) { error = "no se pudo abrir el archivo (revise los permisos)."; return false; }
+        if (!in.is_open()) { error = "No se pudo abrir el archivo (revise los permisos)."; return false; }
 
         Contador c;
         char buf[65536];
@@ -134,21 +134,21 @@ bool contarArchivo(const std::string &rutaOriginal, Conteo &resultado, std::stri
             std::streamsize n = in.gcount();
             for (std::streamsize i = 0; i < n; i++) {
                 unsigned char b = static_cast<unsigned char>(buf[i]);
-                if (b == 0) { error = "el archivo parece binario (contiene bytes nulos), no es un archivo de texto."; return false; }
+                if (b == 0) { error = "El archivo parece binario (contiene bytes nulos), no es un archivo de texto."; return false; }
                 c.byte(b);
             }
             c.r.bytes += static_cast<long>(n);
         }
-        if (in.bad()) { error = "ocurrio un error al leer el archivo."; return false; }
+        if (in.bad()) { error = "Ocurrió un error al leer el archivo."; return false; }
 
         c.terminar();
         resultado = c.r;
         return true;
     } catch (const std::exception &e) {
-        error = std::string("error inesperado: ") + e.what();
+        error = std::string("Error inesperado: ") + e.what();
         return false;
     } catch (...) {
-        error = "error inesperado.";
+        error = "Error inesperado.";
         return false;
     }
 }
@@ -174,7 +174,7 @@ void mostrarConteo(const std::string &ruta) {
                   << "Caracteres especiales: " << r.especiales << '\n'
                   << "Palabras: " << r.palabras << '\n'
                   << "==================\n";
-        if (r.bytes == 0) std::cout << "Aviso: el archivo esta vacio.\n";
+        if (r.bytes == 0) std::cout << "Aviso: el archivo esta vacío.\n";
     }
     esperarVolver();
 }
@@ -186,7 +186,7 @@ void opcionConteoTexto(const std::string &archivo) {
 
 void opcionConteoArchivo() {
     std::cout << "\n--- CONTEO SOBRE ARCHIVO ---\n";
-    std::cout << "Ingrese la ruta del archivo (vacio para VOLVER): ";
+    std::cout << "Ingrese la ruta del archivo (vacío para VOLVER): ";
     std::string ruta;
     if (!std::getline(std::cin, ruta)) { std::cin.clear(); return; }
     if (normalizarRuta(ruta).empty()) return;
