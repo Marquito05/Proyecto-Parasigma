@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
         mostrarMenu();
         std::cin >> std::noskipws >> opt;
         while (!std::cin || opt <= -1 || opt > 3) {
-            std::cout << "\nERROR! Ingresar valor numerico valido.";
+            std::cout << "\nERROR! Ingresar valor numérico valido.";
             mostrarMenu();
             sanitizeStream();
             std::cin >> std::noskipws >> opt;
