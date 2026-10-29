@@ -73,7 +73,7 @@ bool escribirIndice(IndiceInvertido &indice, const std::string &archivo) {
     // 1. Abrir archivo de salida (ruta configurada en el .env)
     std::ofstream salida(archivo);
     if (!salida.is_open()) {
-        std::cerr << "ERROR: no se pudo crear el archivo de indice '" << archivo << "'\n";
+        std::cerr << "ERROR: no se pudo crear el archivo de índice '" << archivo << "'\n";
         return false;
     }
 
