@@ -101,7 +101,7 @@ void servidor(const int &num_jugadores, const int &num_por_equipos, const int &t
     }
 
 
-    std::cout << "Mostrador esperando una conexion en " << puerto << "...\n";
+    std::cout << "Mostrador esperando una conexión en " << puerto << "...\n";
     std::cout << "total_jugadores: " << total_jugadores << '\n';
 
     std::vector<Jugador> jugadores;
@@ -235,7 +235,7 @@ void servidor(const int &num_jugadores, const int &num_por_equipos, const int &t
     int cycle = 0;
     std::string message, msg;
 
-    message = "\nLlendo a ronda " + std::to_string(ronda) + " de " + std::to_string(rondas) + "\n";
+    message = "\nLlendo a ronda " + std::to_string(ronda) + " de " + std::to_string(rondas) + "\n.";
     for (Jugador &jug : jugadores) send(jug.socket, message.c_str(), message.length(), MSG_NOSIGNAL);
 
     size_t team_idx=0;
@@ -307,7 +307,7 @@ void servidor(const int &num_jugadores, const int &num_por_equipos, const int &t
             write_log(active_player.nombre, equipo_nombre, "LANZA_DADO", std::to_string(lanzamiento));
             write_log(active_player.nombre, equipo_nombre, "AVANZA", std::to_string(lanzamiento) + ";" + std::to_string(puntajes_equipos[team_idx]));
 
-            std::string roll_notice = "¡Jugador " + active_player.nombre + " lanzo el dado y cayo en: " + std::to_string(lanzamiento) + "!\n";
+            std::string roll_notice = "¡Jugador " + active_player.nombre + " lanzó el dado y cayó en: " + std::to_string(lanzamiento) + "!\n";
             for (const auto& member : equipos[team_idx]) {
                 send(member.socket, roll_notice.c_str(), roll_notice.length(), MSG_NOSIGNAL);
             }
@@ -339,7 +339,7 @@ void servidor(const int &num_jugadores, const int &num_por_equipos, const int &t
 
             if (ronda > rondas) {
                 message = "\n¡FIN DE RONDA! EL GANADOR ES EL EQUIPO " + std::to_string(team_number) + 
-                          "\n¡FIN DEL JUEGO! Cerrando conexion...\n\n";
+                          "\n¡FIN DEL JUEGO! Cerrando conexión...\n\n";
 
                 write_log("Servidor", equipo_nombre, "TERMINO_PARTIDA", "Juego finalizado. Ganador definitivo: Equipo " + std::to_string(team_number));
 
@@ -385,7 +385,7 @@ void crearServidor(const std::string &playerName) {
     std::getline(std::cin, input_str);
     input_str = get_trimmed_string(input_str);
     while (input_str.empty() || std::stoi(input_str) <= 0) {
-        std::cout << "\nCantidad no valida de jugadores! (>0)";
+        std::cout << "\nCantidad no válida de jugadores! (>0)";
         std::cout << "\nIngrese cantidad de jugadores: ";
         std::getline(std::cin, input_str);
         input_str = get_trimmed_string(input_str);
@@ -397,7 +397,7 @@ void crearServidor(const std::string &playerName) {
     std::getline(std::cin, input_str);
     input_str = get_trimmed_string(input_str);
     while (input_str.empty() || std::stoi(input_str) < 0) {
-        std::cout << "\nCantidad no valida. (>=0)";
+        std::cout << "\nCantidad no válida. (>=0)";
         std::cout << "\nIngrese cantidad de jugadores por equipo: ";
         std::getline(std::cin, input_str);
         input_str = get_trimmed_string(input_str);
@@ -409,7 +409,7 @@ void crearServidor(const std::string &playerName) {
     std::getline(std::cin, input_str);
     input_str = get_trimmed_string(input_str);
     while (input_str.empty() || std::stoi(input_str) <= 0) {
-        std::cout << "\nCantidad no valida de meta! (>0)";
+        std::cout << "\nCantidad no válida de meta! (>0)";
         std::cout << "\nIngrese el tamaño del tablero (meta a alcanzar): ";
         std::getline(std::cin, input_str);
         input_str = get_trimmed_string(input_str);
@@ -420,7 +420,7 @@ void crearServidor(const std::string &playerName) {
     std::getline(std::cin, input_str);
     input_str = get_trimmed_string(input_str);
     while (input_str.empty() || std::stoi(input_str) <= 0) {
-        std::cout << "\nCantidad no valida de caras! (>0)";
+        std::cout << "\nCantidad no válida de caras! (>0)";
         std::cout << "\nIngrese el número de caras del dado: ";
         std::getline(std::cin, input_str);
         input_str = get_trimmed_string(input_str);
@@ -432,7 +432,7 @@ void crearServidor(const std::string &playerName) {
     std::getline(std::cin, input_str);
     input_str = get_trimmed_string(input_str);
     while (input_str.empty() || std::stoi(input_str) <= 0) {
-        std::cout << "\nCantidad no valida de rondas! (>0)";
+        std::cout << "\nCantidad no válida de rondas! (>0)";
         std::cout << "\nIngrese el número de rondas: ";
         std::getline(std::cin, input_str);
         input_str = get_trimmed_string(input_str);
@@ -444,7 +444,7 @@ void crearServidor(const std::string &playerName) {
     std::getline(std::cin, input_str);
     input_str = get_trimmed_string(input_str);
     while (input_str.empty() || std::stoi(input_str) < 0) {
-        std::cout << "\nPuerto no valido!" 
+        std::cout << "\nPuerto no válido!" 
                   << "\nIngrese el puerto ('0' para puerto predeterminado): ";
         std::getline(std::cin, input_str);
         input_str = get_trimmed_string(input_str);
@@ -456,7 +456,7 @@ void crearServidor(const std::string &playerName) {
     std::getline(std::cin, IP);
     IP = get_trimmed_string(IP);
     while (IP.empty()) {
-        std::cout << "ERROR! Ingrese caracteres validos: ";
+        std::cout << "ERROR! Ingrese caracteres válidos: ";
         std::getline(std::cin, IP);
         IP = get_trimmed_string(IP);
     }
