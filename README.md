@@ -14,9 +14,9 @@ Docente: Dr. Luis Veas-Castillo · **Entrega 1**
 - [3. Cómo Compilar y ejecutar](#3-cómo-compilar-y-ejecutar)
 - [4. Descripcion de variables de entorno](#4-descripcion-de-variables-de-entorno)
 - [5. Formato de los archivos de datos](#5-formato-de-los-archivos-de-datos)
-- [6. Estructuras de datos](#6-estructuras-de-datos)
-- [7. Estructura del repositorio](#7-estructura-del-repositorio)
-- [8. Índice invertido paralelo](#8-índice-invertido-paralelo)
+- [6. Funcionamiento de subprogramas](#6-funcionamiento-de-subprogramas)
+- [7. Estructuras de datos](#7-estructuras-de-datos)
+- [8. Estructura del repositorio](#8-estructura-del-repositorio)
 ## 1. Propósito de la aplicación
 Este repositorio contiene el primer módulo del sistema **SistOpe**: el **Administrador de Usuarios y Perfiles**.
 Es una aplicación de consola escrita en C++ que permite gestionar las dos entidades base sobre las que se construirán los módulos siguientes del curso:
