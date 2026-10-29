@@ -50,7 +50,7 @@ void hiloTrabajador(int numero) {
 }
 
 int main() {
-    std::cout << "\n===== CREAR INDICE INVERTIDO =====\n";
+    std::cout << "\n===== CREAR ÍNDICE INVERTIDO =====\n";
 
     // 1. Leer y validar las variables de entorno del .env
     ConfigIndice config;
@@ -100,9 +100,9 @@ int main() {
     std::cout << "Libros procesados: " << librosProcesados << " de " << libros.size() << "\n";
     std::cout << "Threads terminados: " << threads.size() << " de " << config.nThreads << "\n";
     if (indiceGuardado) {
-        std::cout << "Indice invertido guardado en " << config.archivoIndice << "\n";
+        std::cout << "Índice invertido guardado en " << config.archivoIndice << "\n";
     } else {
-        std::cout << "ERROR: el indice invertido no se guardo\n";
+        std::cout << "ERROR: el índice invertido no se guardó\n";
     }
 
     if (indiceGuardado && librosProcesados == (int) libros.size()) return 0;
