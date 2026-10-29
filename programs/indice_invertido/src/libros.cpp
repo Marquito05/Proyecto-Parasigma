@@ -58,6 +58,6 @@ bool guardarMapaLibros(const std::vector<Libro> &libros, const std::string &arch
     }
     salida.close();
 
-    std::cout << "Asociacion ID-libro guardada en " << archivo << "\n";
+    std::cout << "Asociación ID-libro guardada en " << archivo << "\n";
     return true;
 }
